@@ -1,0 +1,174 @@
+# this is an example of the Uber API
+# as a demonstration of an API spec in YAML
+swagger: '2.0'
+info:
+  title: Shrimp Farm API
+  description: A shitty service that provides nothing.
+  version: "1.0.0"
+# the domain of the service
+host: api.shrimpfarm.com
+# array of all schemes that your API supports
+schemes:
+  - https
+# will be prefixed to all paths
+basePath: /v1
+produces:
+  - application/json
+paths:
+  /season/{year}/season/:
+    get:
+      summary: Season Summary
+      description: |
+        This endpoint retuns a summary of information for the farming season selected.
+      parameters:
+        - name: year
+          in: path
+          description: Season Year
+          required: true
+          type: number
+      tags:
+        - Summary
+      responses:
+        200:
+          description: Summary of Shrimp Farm Season
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Pond'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  
+definitions:
+  Pond:
+    type: object
+    properties:
+      number:
+        type: string
+        description: Unique identifier representing a specific product for a given latitude & longitude. For example, uberX in San Francisco will have a different product_id than uberX in Los Angeles.
+      size:
+        type: string
+        description: size of pond in acres.
+      nickname:
+        type: string
+        description: pond nickname.
+      stock:
+        type: string
+        description: Current Stock In Pond.
+      feed:
+        type: string
+        description: Current Feed Consumption
+      status:
+        type: string
+        description: Current Pond Status Good/Bad/Shit/BatShit.
+  FeedEntry:
+    type: object
+    properties:
+      pondNumber:
+        type: string
+        description: Pond number
+      date:
+        type: string
+        description: mm/dd/yyyy format date String.
+      season:
+        type: string
+        description: Feeding season 2017-02.
+      feedType:
+        type: string
+        description: Feed type.
+      feedAmount:
+        type: number
+        description: feed in kilograms.
+      feedCheck:
+        type: string
+        description: complete/partial/bad.
+      feedTime:
+        type: number
+        description: morning/aft/evening/night.
+  ExpenseEntry:
+    type: object
+    properties:
+      categoryName:
+        type: string
+        description: expense category name.
+      subCategory:
+        type: string
+        description: expense sub category.
+      planned:
+        type: string
+        description: Yes/No
+      price:
+        type: integer
+        description: expense price in rupees.
+      date:
+        type: string
+        description: mm/dd/yyyy expense date.
+      comments:
+        type: string
+        description: paid by/paid to/cash/bank/cheque
+  ExpenseCategory:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Expense main category.
+      history:
+        type: string
+        description: list of string sub category names
+  FarmProgress:
+    type: object
+    properties:
+      pondNumber:
+        type: integer
+        format: int32
+        description: Pond Number.
+      daysOfCultivation:
+        type: integer
+        format: int32
+        description: Days of cultivation.
+      count:
+        type: integer
+        format: int32
+        description: Shrimp Count.
+      feedConsumption:
+        type: integer
+        description: Current Feed Consumption.
+      expWeight:
+        type: integer
+        format: int32
+        description: Expected shrimp weight.
+  SeasonProgress:
+    type: object
+    properties:
+      farmProgressList:
+        type: array
+        description: Pond Number.
+        items:
+          $ref: '#/definitions/FarmProgress'
+      daysOfCultivation:
+        type: integer
+        format: int32
+        description: Days of cultivation.
+      count:
+        type: integer
+        format: int32
+        description: Shrimp Count.
+      feedConsumption:
+        type: integer
+        description: Current Feed Consumption.
+      expWeight:
+        type: integer
+        format: int32
+        description: Expected shrimp weight.
+     
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string
