@@ -2,11 +2,11 @@
 # as a demonstration of an API spec in YAML
 swagger: '2.0'
 info:
-  title: Shrimp Farm API
+  title: API
   description: A shitty service that provides nothing.
   version: "1.0.0"
 # the domain of the service
-host: api.shrimpfarm.com
+host: api.chaty.com
 # array of all schemes that your API supports
 schemes:
   - https
@@ -15,7 +15,7 @@ basePath: /v1
 produces:
   - application/json
 paths:
-  /season/{year}/season/:
+  /seasonSummary/{year}/{season}/:
     get:
       summary: Season Summary
       description: |
@@ -26,15 +26,80 @@ paths:
           description: Season Year
           required: true
           type: number
+        - name: season
+          in: path
+          description: Season - One/two/three
+          required: true
+          type: number
       tags:
-        - Summary
+        - SeasonSummary
       responses:
         200:
           description: Summary of Shrimp Farm Season
           schema:
             type: array
             items:
-              $ref: '#/definitions/Pond'
+              $ref: '#/definitions/SeasonProgress'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /feedEntry:
+    post:
+      summary: Post Feed Entry
+      description: |
+        This endpoint adds a feed entry for the day/year/season.
+      parameters:
+        - name: FeedEntry
+          in: body
+          description: FeedEntry Object to be added.
+          schema:
+            $ref: '#/definitions/FeedEntry'
+      tags:
+        - FeedEntry
+      responses:
+        200:
+          description: Feed Entry Added Sucessfully.
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /expenseEntry:
+    post:
+      summary: Post Expense Entry
+      description: |
+        This endpoint adds a Expense entry for the day/year/season.
+      parameters:
+        - name: ExpenseEntry
+          in: body
+          description: ExpenseEntry Object to be added.
+          schema:
+            $ref: '#/definitions/ExpenseEntry'
+      tags:
+        - ExpenseEntry
+      responses:
+        200:
+          description: Expense Entry Added Sucessfully.
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /saleEntry:
+    post:
+      summary: Post Sale Entry
+      description: |
+        This endpoint adds a Sale entry for the Pond/year/season.
+      parameters:
+        - name: SaleEntry
+          in: body
+          description: SaleEntry Object to be added.
+          schema:
+            $ref: '#/definitions/SaleEntry'
+      tags:
+        - SaleEntry
+      responses:
+        200:
+          description: Sale Entry Added Sucessfully.
         default:
           description: Unexpected error
           schema:
@@ -86,6 +151,24 @@ definitions:
       feedTime:
         type: number
         description: morning/aft/evening/night.
+  SaleEntry:
+    type: object
+    properties:
+      pondNumber:
+        type: string
+        description: Pond number
+      date:
+        type: string
+        description: mm/dd/yyyy format date String.
+      season:
+        type: string
+        description: Feeding season 2017-02.
+      feedType:
+        type: string
+        description: Feed type.
+      feedAmount:
+        type: number
+        description: feed in kilograms.
   ExpenseEntry:
     type: object
     properties:
