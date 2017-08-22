@@ -149,7 +149,7 @@ definitions:
         type: string
         description: complete/partial/bad.
       feedTime:
-        type: number
+        type: string
         description: morning/aft/evening/night.
   SaleEntry:
     type: object
