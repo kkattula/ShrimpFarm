@@ -12,18 +12,20 @@ public class FeedEntryModel {
 	@Id
 	private String id;
 	
-	private String pondNumber;
+	private String pond;
 
 	private String date;
 
 	private String season;
 
-	private String feedType;
+	private String type;
 
-	private float feedAmount;
+	private float amount;
 
-	private String feedCheck;
+	private String check;
 
-	private String feedTime;
+	private String time;
+	
+	private String site;
 
 }

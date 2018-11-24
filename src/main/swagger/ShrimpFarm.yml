@@ -44,6 +44,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+            
   /feedEntry:
     post:
       summary: Post Feed Entry
@@ -56,7 +57,7 @@ paths:
           schema:
             $ref: '#/definitions/FeedEntry'
       tags:
-        - FeedEntry
+        - PondActivity
       responses:
         200:
           description: Feed Entry Added Sucessfully.
@@ -64,6 +65,49 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+            
+  /stockEntry:
+    post:
+      summary: Post Stocking Entry
+      description: |
+        This endpoint adds a stock entry for the day/year/season.
+      parameters:
+        - name: StockEntry
+          in: body
+          description: StockEntry Object to be added.
+          schema:
+            $ref: '#/definitions/StockEntry'
+      tags:
+        - PondActivity
+      responses:
+        200:
+          description: Stock Entry Added Sucessfully.
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error' 
+            
+  /supplimentEntry:
+    post:
+      summary: Post Suppliment Entry
+      description: |
+        This endpoint adds a suppliment entry for the day/year/season.
+      parameters:
+        - name: SupplimentEntry
+          in: body
+          description: SupplimentEntry Object to be added.
+          schema:
+            $ref: '#/definitions/SupplimentEntry'
+      tags:
+        - PondActivity
+      responses:
+        200:
+          description: Suppliment Entry Added Sucessfully.
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error' 
+            
   /expenseEntry:
     post:
       summary: Post Expense Entry
@@ -76,7 +120,7 @@ paths:
           schema:
             $ref: '#/definitions/ExpenseEntry'
       tags:
-        - ExpenseEntry
+        - Monetory
       responses:
         200:
           description: Expense Entry Added Sucessfully.
@@ -84,6 +128,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+            
   /saleEntry:
     post:
       summary: Post Sale Entry
@@ -96,7 +141,7 @@ paths:
           schema:
             $ref: '#/definitions/SaleEntry'
       tags:
-        - SaleEntry
+        - Monetory
       responses:
         200:
           description: Sale Entry Added Sucessfully.
@@ -106,6 +151,7 @@ paths:
             $ref: '#/definitions/Error'
   
 definitions:
+
   Pond:
     type: object
     properties:
@@ -127,10 +173,11 @@ definitions:
       status:
         type: string
         description: Current Pond Status Good/Bad/Shit/BatShit.
+        
   FeedEntry:
     type: object
     properties:
-      pondNumber:
+      pond:
         type: string
         description: Pond number
       date:
@@ -139,18 +186,72 @@ definitions:
       season:
         type: string
         description: Feeding season 2017-02.
-      feedType:
+      site:
+        type: string
+        description: Site where Pond is.
+      type:
         type: string
         description: Feed type.
-      feedAmount:
+      amount:
         type: number
         description: feed in kilograms.
-      feedCheck:
+      check:
         type: string
         description: complete/partial/bad.
-      feedTime:
+      time:
         type: string
         description: morning/aft/evening/night.
+  
+  SupplimentEntry:
+    type: object
+    properties:
+      pond:
+        type: string
+        description: Pond number
+      date:
+        type: string
+        description: mm/dd/yyyy format date String.
+      season:
+        type: string
+        description: Feeding season 2017-02.
+      site:
+        type: string
+        description: Site where Pond is.
+      type:
+        type: string
+        description: Feed type.
+      amount:
+        type: number
+        description: feed in kilograms.
+      time:
+        type: string
+        description: morning/aft/evening/night.
+        
+  StockEntry:
+    type: object
+    properties:
+      pond:
+        type: string
+        description: Pond number
+      date:
+        type: string
+        description: mm/dd/yyyy format date String.
+      season:
+        type: string
+        description: Feeding season 2017-02.
+      site:
+        type: string
+        description: Site where Pond is.
+      amount:
+        type: number
+        description: number of seed.
+      hatchery:
+        type: string
+        description: Hatchery where seed is bought.
+      plSize:
+        type: integer
+        description: Post Larva Size. 
+        
   SaleEntry:
     type: object
     properties:
@@ -169,16 +270,20 @@ definitions:
       feedAmount:
         type: number
         description: feed in kilograms.
+        
   ExpenseEntry:
     type: object
     properties:
-      categoryName:
+      category:
         type: string
         description: expense category name.
-      subCategory:
+      quantity:
         type: string
-        description: expense sub category.
-      planned:
+        description: expense item quantity.
+      isPlanned:
+        type: string
+        description: Yes/No
+      paymentType:
         type: string
         description: Yes/No
       price:
@@ -190,15 +295,8 @@ definitions:
       comments:
         type: string
         description: paid by/paid to/cash/bank/cheque
-  ExpenseCategory:
-    type: object
-    properties:
-      name:
-        type: string
-        description: Expense main category.
-      history:
-        type: string
-        description: list of string sub category names
+        
+        
   FarmProgress:
     type: object
     properties:
@@ -221,6 +319,7 @@ definitions:
         type: integer
         format: int32
         description: Expected shrimp weight.
+        
   SeasonProgress:
     type: object
     properties:
