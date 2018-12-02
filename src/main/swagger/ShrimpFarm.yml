@@ -139,7 +139,7 @@ paths:
           in: body
           description: SaleEntry Object to be added.
           schema:
-            $ref: '#/definitions/SaleEntry'
+            $ref: '#/definitions/HarvestEntry'
       tags:
         - Monetory
       responses:
@@ -155,6 +155,9 @@ definitions:
   Pond:
     type: object
     properties:
+      _id:
+        type: string
+        description: Monfo DB ID
       number:
         type: string
         description: Unique identifier representing a specific product for a given latitude & longitude. For example, uberX in San Francisco will have a different product_id than uberX in Los Angeles.
@@ -177,6 +180,9 @@ definitions:
   FeedEntry:
     type: object
     properties:
+      _id:
+        type: string
+        description: Monfo DB ID
       pond:
         type: string
         description: Pond number
@@ -185,7 +191,7 @@ definitions:
         description: mm/dd/yyyy format date String.
       season:
         type: string
-        description: Feeding season 2017-02.
+        description: Feeding season format 2017-02.
       site:
         type: string
         description: Site where Pond is.
@@ -205,6 +211,9 @@ definitions:
   SupplimentEntry:
     type: object
     properties:
+      _id:
+        type: string
+        description: Monfo DB ID
       pond:
         type: string
         description: Pond number
@@ -219,7 +228,10 @@ definitions:
         description: Site where Pond is.
       type:
         type: string
-        description: Feed type.
+        description: Supplement type.
+      planned:
+        type: boolean
+        description: Is Planned
       amount:
         type: number
         description: feed in kilograms.
@@ -230,6 +242,9 @@ definitions:
   StockEntry:
     type: object
     properties:
+      _id:
+        type: string
+        description: Monfo DB ID
       pond:
         type: string
         description: Pond number
@@ -242,6 +257,9 @@ definitions:
       site:
         type: string
         description: Site where Pond is.
+      salinity:
+        type: number
+        description: Water Salinity.
       amount:
         type: number
         description: number of seed.
@@ -252,9 +270,12 @@ definitions:
         type: integer
         description: Post Larva Size. 
         
-  SaleEntry:
+  HarvestEntry:
     type: object
     properties:
+      _id:
+        type: string
+        description: Monfo DB ID
       pondNumber:
         type: string
         description: Pond number
@@ -264,16 +285,31 @@ definitions:
       season:
         type: string
         description: Feeding season 2017-02.
-      feedType:
+      buyer:
         type: string
         description: Feed type.
-      feedAmount:
+      planned:
+        type: boolean
+        description: Is Planned Harvest.
+      tonnage:
         type: number
-        description: feed in kilograms.
+        description: Tonnage in kilograms.
+      countPrice:
+        type: number
+        description: Price of Harvested count Size.
+      amount:
+        type: number
+        description: Total Harvest Amount
+      comments:
+        type: string
+        description: Comments
         
   ExpenseEntry:
     type: object
     properties:
+      _id:
+        type: string
+        description: Monfo DB ID
       category:
         type: string
         description: expense category name.

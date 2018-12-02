@@ -6,11 +6,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.Data;
 
 @Data
-@Document(collection = "feedEntry")
-public class FeedEntryModel {
+@Document(collection = "supplement")
+public class Supplement {
 
 	@Id
-	private String id;
+	private String _id;
 	
 	private String pond;
 
@@ -22,7 +22,7 @@ public class FeedEntryModel {
 
 	private float amount;
 
-	private String check;
+	private Boolean planned;
 
 	private String time;
 	
