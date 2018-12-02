@@ -67,6 +67,8 @@ public class DataLoaderUtil {
 			}
 		}
 		
+		feedLoadList.stream().forEach(a -> feedEntryRepo.save(a));
+		
 		return feedLoadList;
 
 	}
