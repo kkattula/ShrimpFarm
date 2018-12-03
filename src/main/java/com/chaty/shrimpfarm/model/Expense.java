@@ -12,15 +12,17 @@ public class Expense {
 	@Id
 	private String _id;
 
-	private String categoryName = null;
+	private String category = null;
 
-	private String subCategory = null;
+	private String isPlanned = null;
 
-	private String planned = null;
+	private String quatity = null;
 
 	private Integer price = null;
 
 	private String date = null;
+	
+	private String payment = null;
 
 	private String comments = null;
 }
