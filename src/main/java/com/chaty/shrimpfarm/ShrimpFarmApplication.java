@@ -15,12 +15,18 @@ public class ShrimpFarmApplication {
 	}
 	
 	@Bean
-	   public WebMvcConfigurer corsConfigurer() {
-	      return new WebMvcConfigurerAdapter() {
-	         @Override
-	         public void addCorsMappings(CorsRegistry registry) {
-	            registry.addMapping("/farm/api/").allowedOrigins("http://aquajet.cfapps.io");
-	         }
-	      };
-	   }
+	public WebMvcConfigurer corsConfigurer() {
+	    return new WebMvcConfigurerAdapter() {
+	        @Override
+	        public void addCorsMappings(CorsRegistry registry) {
+	            registry.addMapping("/**")
+	                    .allowedOrigins("http://aquajet.cfapps.io")
+	                    .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS")
+	                    .allowedHeaders("Content-Type", "authorization")
+	                    .exposedHeaders("Content-Type")
+	                    .maxAge(3600);
+	        }
+	    };
+	}
+	
 }
