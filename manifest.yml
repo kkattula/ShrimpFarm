@@ -1,0 +1,4 @@
+---
+applications:
+- name: shrimp-api
+  path: target/ShrimpFarm-1.0.0-SNAPSHOT.jar

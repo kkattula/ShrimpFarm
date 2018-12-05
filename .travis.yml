@@ -1,0 +1,11 @@
+language: java
+deploy:
+   provider: cloudfoundry
+   username: kbabachaitanya@gmail.com
+   password: 
+    secure: EtaTsqk0poMlhjxiQcw1YwSCq9iIGjsVt2z6QJBX83exIUSZIUHUZYa82s2J4rKD6/yJpnCkG7vxvrzBCSSM7R0cuwdBXx64Rae64LGCIMmW9kT+sJ3AnvJDPmu9+sT9Er0gJjWZFnvKpVRhmZr8xTlRJ5aRx78A/ICqGY9/uMabjHZNXXVDmles4DpcjVPvDmFp9z5xcfAApr6LQQR8A9K1Y1U9bu4kElVRFyW8IpaEAoGez6i0svYT3yrFXNyALiMYRjP3u/HJAx5ezBlZB47mb7G0zQSowqVKpnojDKWnkW3yoQpfmaV+m6iobcT0+7Kmv+7r2pvXzT0z14spqaUfzMloG22cQehAeoI4NFUPEgajWyikzCjQekmbfopglI+8v1Dqm5xkX1vnozXvyPyMWxWQ+Wo9DEkSpiiqz3MZHvPWZy2u1PYh9l5gOAfabnpOAZneBbx6UDnOkUNnNeGoXp6yAC9cqGQwh7+bNTvzxoYW45+eyiZ0WQad2XMZWoj02QvTEbGuUW+cZnw2AodVV9kCo5MhctdLbkcy4XvVjYik/BfTzuvNdMlADZOnKwa+Nl6S+6K067UkAa2pYkSRfto3ICcE/35vXV25+FtK0ChS+o45b/C5tQxi/Klnzni1ruZ8WwxhzuxPECUYhINn6WbvuIkQPmmEEMS9DPI=
+   api: https://api.run.pivotal.io
+   organization: shrimpkingdom
+   space: development
+   manifest: manifest.yml       # (optional)  Defaults to manifest.yml.
+   app_name: ShrimpAPI                # (optional)
