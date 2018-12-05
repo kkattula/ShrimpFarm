@@ -1,7 +1,11 @@
 package com.chaty.shrimpfarm.controller;
 
+import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -25,20 +29,32 @@ public class ShrimpFarmController {
 
 	@Autowired
 	FeedRepo feedEntryRepo;
-	
+
 	@Autowired
 	ExpenseRepo expenseRepo;
 
 	@Autowired
 	DataLoaderUtil util;
 
+	@RequestMapping("/user")
+	public Principal user(Principal user) {
+		return user;
+	}
+
+	@RequestMapping("/resource")
+	public Map<String, Object> home() {
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("id", UUID.randomUUID().toString());
+		model.put("content", "Hello World");
+		return model;
+	}
+
 	@RequestMapping(path = "/test", method = RequestMethod.GET)
 	public List<Feed> testLoad() {
 		// return util.loadFeed();
 		return new ArrayList<Feed>();
 	}
-	
-	
+
 	// Feed Entry Paths
 
 	@RequestMapping(path = "/feedEntry", method = RequestMethod.POST)
@@ -70,9 +86,9 @@ public class ShrimpFarmController {
 			return feedEntryRepo.findAll();
 		}
 	}
-	
+
 	// Expense Entry Paths
-	
+
 	@RequestMapping(path = "/expenseEntry", method = RequestMethod.POST)
 	public Expense addExpenseEntry(@Valid @RequestBody Expense entry) {
 		return expenseRepo.save(entry);
@@ -82,16 +98,16 @@ public class ShrimpFarmController {
 	public void addExpenseList(@Valid @RequestBody List<Expense> entry) {
 		entry.stream().forEach(a -> expenseRepo.save(a));
 	}
-	
+
 	@RequestMapping(path = "/deleteExpense/{id}", method = RequestMethod.DELETE)
 	public void deleteExpense(@PathVariable("id") String id) {
 		final Expense feed = expenseRepo.findOne(id);
 		expenseRepo.delete(feed);
 	}
-	
+
 	@RequestMapping(path = "/getExpenseList", method = RequestMethod.GET)
 	public List<Expense> getExpenseList() {
-			return expenseRepo.findAll();
+		return expenseRepo.findAll();
 	}
 
 }
