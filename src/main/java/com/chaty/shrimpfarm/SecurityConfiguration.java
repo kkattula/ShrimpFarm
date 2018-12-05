@@ -21,6 +21,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		CorsConfiguration configuration = new CorsConfiguration();
 		configuration.setAllowedOrigins(Arrays.asList("http://aquajet.cfapps.io"));
 		configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
+		configuration.setAllowedHeaders(Arrays.asList("authorization","content-type"));
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
