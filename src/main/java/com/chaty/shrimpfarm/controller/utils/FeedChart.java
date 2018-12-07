@@ -27,13 +27,13 @@ public class FeedChart {
 				type = "CP-1";
 				Intial += 100;
 			} else if (i > 5 && i <= 10) {
-				type = "CP-1+CP-2";
+				type = "CP-1/2";
 				Intial += 200;
 			} else if (i > 10 && i <= 20) {
 				type = "CP-2";
 				Intial += 200;
 			} else if (i > 20 && i <= 25) {
-				type = "CP-2+CP-3";
+				type = "CP-2/3";
 				Intial += 200;
 			} else {
 				type = "CP-3";

@@ -48,9 +48,7 @@ public class DataLoaderUtil {
 	public List<Feed> loadFeed(String pond, int stock) {
 
 		List<Feed> feedLoadList = FeedChart.fillFeed(pond, stock);
-
-		//feedLoadList.stream().forEach(a -> feedEntryRepo.save(a));
-
+		feedLoadList.stream().forEach(a -> feedEntryRepo.save(a));
 		return feedLoadList;
 
 	}

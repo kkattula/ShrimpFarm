@@ -1,0 +1,29 @@
+# MONGODB LOCAL (MongoProperties)
+
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: chatyfarm
+  jackson:
+    serialization:
+      INDENT_OUTPUT: true
+      
+
+# MONGODB REMOTE (MongoProperties)
+
+#spring:
+#  data:
+#    mongodb:
+#      host: ds033096.mlab.com
+#      port: 33096
+#      database: petstorerbc
+#      username: chaty
+#      password:
+#      - chaty
+
+
+security:
+  ignored:
+  - "*.bundle.*"

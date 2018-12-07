@@ -48,10 +48,9 @@ public class ShrimpFarmController {
 		return model;
 	}
 
-	@RequestMapping(path = "/test", method = RequestMethod.GET)
-	public List<Feed> testLoad() {
-		return util.loadFeed("1", 2);
-		// return new ArrayList<Feed>();
+	@RequestMapping(path = "/loadFeed/{pond}/{stock}", method = RequestMethod.GET)
+	public List<Feed> loadFeed(@PathVariable("pond") String pond, @PathVariable("stock") Integer stock) {
+		return util.loadFeed(pond, stock);
 	}
 
 	// Feed Entry Paths
