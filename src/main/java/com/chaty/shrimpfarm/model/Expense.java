@@ -1,5 +1,7 @@
 package com.chaty.shrimpfarm.model;
 
+import java.time.LocalDate;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -18,9 +20,9 @@ public class Expense {
 
 	private String quatity = null;
 
-	private Integer price = null;
+	private Double price = null;
 
-	private String date = null;
+	private LocalDate date = null;
 	
 	private String payment = null;
 

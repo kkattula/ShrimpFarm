@@ -1,5 +1,7 @@
 package com.chaty.shrimpfarm.model;
 
+import java.time.LocalDate;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -14,13 +16,13 @@ public class Supplement {
 	
 	private String pond;
 
-	private String date;
+	private LocalDate date;
 
 	private String season;
 
 	private String type;
 
-	private float amount;
+	private Double amount;
 
 	private Boolean planned;
 

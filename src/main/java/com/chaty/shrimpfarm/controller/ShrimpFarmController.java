@@ -1,7 +1,6 @@
 package com.chaty.shrimpfarm.controller;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,8 +50,8 @@ public class ShrimpFarmController {
 
 	@RequestMapping(path = "/test", method = RequestMethod.GET)
 	public List<Feed> testLoad() {
-		// return util.loadFeed();
-		return new ArrayList<Feed>();
+		return util.loadFeed("1", 2);
+		// return new ArrayList<Feed>();
 	}
 
 	// Feed Entry Paths

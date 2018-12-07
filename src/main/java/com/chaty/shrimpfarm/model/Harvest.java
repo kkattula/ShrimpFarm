@@ -1,5 +1,7 @@
 package com.chaty.shrimpfarm.model;
 
+import java.time.LocalDate;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -13,20 +15,22 @@ public class Harvest {
 	private String _id;
 
 	private String pond = null;
-	
+
 	private String site = null;
 
 	private String season = null;
 
 	private Boolean planned = null;
 
-	private Integer tonnage = null;
-	
+	private Double tonnage = null;
+
 	private Integer count = null;
-	
+
 	private String buyer = null;
 
-	private String date = null;
+	private LocalDate date = null;
 
 	private String comments = null;
+
+	private Double countPrice = null;
 }

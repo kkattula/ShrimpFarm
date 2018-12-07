@@ -1,12 +1,14 @@
 package com.chaty.shrimpfarm.model;
 
+import java.time.LocalDate;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.Data;
 
 @Data
-@Document(collection = "feed")
+@Document(collection = "stock")
 public class Stock {
 
 	@Id
@@ -14,7 +16,7 @@ public class Stock {
 	
 	private String pond;
 
-	private String date;
+	private LocalDate date;
 
 	private String season;
 
@@ -22,7 +24,7 @@ public class Stock {
 
 	private Integer amount;
 
-	private String plSize;
+	private Integer plSize;
 
 	private Integer salinity;
 	
