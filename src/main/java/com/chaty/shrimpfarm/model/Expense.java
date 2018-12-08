@@ -14,17 +14,17 @@ public class Expense {
 	@Id
 	private String _id;
 
-	private String category = null;
+	private LocalDate date;
 
-	private String isPlanned = null;
+	private String category;
 
-	private String quatity = null;
-
-	private Double price = null;
-
-	private LocalDate date = null;
+	private String isPlanned;
 	
-	private String payment = null;
+	private String paymentType;
 
-	private String comments = null;
+	private String quantity;
+
+	private float price;
+
+	private String comments;
 }
