@@ -20,7 +20,7 @@ public class Harvest {
 
 	private String season = null;
 
-	private Boolean planned = null;
+	private String planned = null;
 
 	private Double tonnage = null;
 

@@ -24,5 +24,7 @@ public class Sampling {
 
 	private String count;
 	
+	private String time;
+	
 
 }

@@ -10,7 +10,9 @@ import org.springframework.stereotype.Component;
 import com.chaty.shrimpfarm.controller.utils.FeedChart;
 import com.chaty.shrimpfarm.model.Feed;
 import com.chaty.shrimpfarm.model.Harvest;
+import com.chaty.shrimpfarm.model.Sampling;
 import com.chaty.shrimpfarm.model.Stock;
+import com.chaty.shrimpfarm.model.Supplement;
 import com.chaty.shrimpfarm.repository.ExpenseRepo;
 import com.chaty.shrimpfarm.repository.FeedRepo;
 import com.chaty.shrimpfarm.repository.HarvestRepo;
@@ -52,6 +54,49 @@ public class DataLoaderUtil {
 		return feedLoadList;
 
 	}
+	
+	
+	public List<Supplement> loadSupplement(int num) {
+
+		List<Supplement> samplingList = new ArrayList<>();
+
+		for (Integer i = 1; i <= num; i++) {
+			Supplement supplement = new Supplement();
+			supplement.setSite("Doruvukatta");
+			supplement.setPond(i.toString());
+			supplement.setAmount(25.00);
+			supplement.setDate(LocalDate.now().withYear(2017).withMonth(3).withDayOfMonth(6));
+			supplement.setSeason("Summer");
+			samplingList.add(supplement);
+		}
+
+		samplingList.stream().forEach(a -> supplementRepo.save(a));
+
+		return samplingList;
+
+	}
+	
+	
+	public List<Sampling> loadSampling(int num) {
+
+		List<Sampling> samplingList = new ArrayList<>();
+
+		for (Integer i = 1; i <= num; i++) {
+			Sampling sampling = new Sampling();
+			sampling.setSite("Doruvukatta");
+			sampling.setPond("1");
+			sampling.setCount("150");
+			sampling.setDate(LocalDate.now().withYear(2017).withMonth(3).withDayOfMonth(6));
+			sampling.setSeason("Summer");
+			sampling.setTime("Morning");
+			samplingList.add(sampling);
+		}
+
+		samplingList.stream().forEach(a -> samplingRepo.save(a));
+
+		return samplingList;
+
+	}
 
 	public List<Stock> loadStock(int num) {
 
@@ -60,7 +105,7 @@ public class DataLoaderUtil {
 		for (Integer i = 1; i <= num; i++) {
 			Stock stock = new Stock();
 			stock.setSite("Doruvukatta");
-			stock.setPond("1");
+			stock.setPond(i.toString());
 			stock.setAmount(250000);
 			stock.setDate(LocalDate.now().withYear(2017).withMonth(3).withDayOfMonth(6));
 			stock.setHatchery("Mahalakshmi");
@@ -88,7 +133,7 @@ public class DataLoaderUtil {
 			harvest.setDate(LocalDate.now().withYear(2017).withMonth(3).withDayOfMonth(6));
 			harvest.setCount(65);
 			harvest.setTonnage(2800d);
-			harvest.setPlanned(true);
+			harvest.setPlanned("YES");
 			harvest.setSeason("Summer");
 			harvest.setCountPrice(230d);
 			harvest.setComments("Info about harvest goes here");
