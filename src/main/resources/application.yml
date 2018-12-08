@@ -20,8 +20,7 @@ spring:
       port: 33096
       database: petstorerbc
       username: chaty
-      password:
-      - chaty
+      password: chaty
 
 
 security:
