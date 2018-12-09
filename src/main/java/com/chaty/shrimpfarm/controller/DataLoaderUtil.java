@@ -71,9 +71,9 @@ public class DataLoaderUtil {
 		
 	}
 	
-	public List<Feed> loadFeed(String pond, int stock) {
+	public List<Feed> loadFeed(String pond, int stock,String site,String season) {
 
-		List<Feed> feedLoadList = FeedChart.fillFeed(pond, stock);
+		List<Feed> feedLoadList = FeedChart.fillFeed(pond, stock,site,season);
 		feedLoadList.stream().forEach(a -> feedEntryRepo.save(a));
 		return feedLoadList;
 

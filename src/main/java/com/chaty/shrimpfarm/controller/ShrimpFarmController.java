@@ -119,10 +119,8 @@ public class ShrimpFarmController {
 
 					Double total = info.getFeed().stream().mapToDouble(a -> a.getAmount()).sum();
 					info.setFeedTotal(total.floatValue());
-					
-					System.out.println(total);
-					
-					Long days = ChronoUnit.DAYS.between(info.getStock().getDate(),LocalDate.now());
+
+					Long days = ChronoUnit.DAYS.between(info.getStock().getDate(), LocalDate.now());
 					info.setProgressDays(days.intValue());
 
 					info.setNumber(obj.getNumber());
@@ -139,9 +137,10 @@ public class ShrimpFarmController {
 
 	// Load Data
 
-	@RequestMapping(path = "/loadFeed/{pond}/{stock}", method = RequestMethod.GET)
-	public List<Feed> loadFeed(@PathVariable("pond") String pond, @PathVariable("stock") Integer stock) {
-		return util.loadFeed(pond, stock);
+	@RequestMapping(path = "/loadFeed/{pond}/{stock}/{site}/{season}", method = RequestMethod.GET)
+	public List<Feed> loadFeed(@PathVariable("pond") String pond, @PathVariable("stock") int stock,
+			@PathVariable("site") String site, @PathVariable("season") String season) {
+		return util.loadFeed(pond, stock, site, season);
 	}
 
 	@RequestMapping(path = "/loadHarvest/{pond}", method = RequestMethod.GET)

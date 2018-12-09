@@ -14,12 +14,14 @@ public class FeedChart {
 
 	private static List<String> feedTime = Arrays.asList("Morning", "Afternoon", "Evening", "Night");
 
-	public static List<Feed> fillFeed(String pondNumber,int stockinMills) {
+	public static List<Feed> fillFeed(String pondNumber,int stockinMills,String site,String season) {
 
 		List<FeedModel> feedModelList = new ArrayList<>();
 
 		int Intial = 400;
 		String type = "";
+		
+		stockinMills = stockinMills/100000;
 
 		for (int i = 1; i <= 30; i++) {
 
@@ -56,8 +58,8 @@ public class FeedChart {
 				feed.setPond(pondNumber);
 				feed.setDate(LocalDate.now().withMonth(1).withDayOfMonth(i + 1));
 				feed.setCheck(false);
-				feed.setSeason("Summer");
-				feed.setSite("Doruvukatta");
+				feed.setSeason(season);
+				feed.setSite(site);
 				feedList.add(feed);
 			}
 		}
