@@ -1,6 +1,9 @@
 package com.chaty.shrimpfarm.controller;
 
 import java.security.Principal;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,13 +23,17 @@ import org.springframework.web.bind.annotation.RestController;
 import com.chaty.shrimpfarm.model.Expense;
 import com.chaty.shrimpfarm.model.Feed;
 import com.chaty.shrimpfarm.model.Harvest;
+import com.chaty.shrimpfarm.model.Pond;
+import com.chaty.shrimpfarm.model.PondInfo;
 import com.chaty.shrimpfarm.model.Sampling;
 import com.chaty.shrimpfarm.model.Stock;
 import com.chaty.shrimpfarm.model.Supplement;
 import com.chaty.shrimpfarm.repository.ExpenseRepo;
 import com.chaty.shrimpfarm.repository.FeedRepo;
 import com.chaty.shrimpfarm.repository.HarvestRepo;
+import com.chaty.shrimpfarm.repository.PondRepo;
 import com.chaty.shrimpfarm.repository.SamplingRepo;
+import com.chaty.shrimpfarm.repository.StockRepo;
 import com.chaty.shrimpfarm.repository.SupplementRepo;
 
 @RestController
@@ -49,6 +56,12 @@ public class ShrimpFarmController {
 	SupplementRepo supplementRepo;
 
 	@Autowired
+	PondRepo pondRepo;
+
+	@Autowired
+	StockRepo stockRepo;
+
+	@Autowired
 	DataLoaderUtil util;
 
 	@RequestMapping("/user")
@@ -62,6 +75,66 @@ public class ShrimpFarmController {
 		model.put("id", UUID.randomUUID().toString());
 		model.put("content", "Hello World");
 		return model;
+	}
+
+	// Dashboard Data
+
+	@RequestMapping(path = "/getDashboard/{site}/{season}", method = RequestMethod.GET)
+	public List<PondInfo> getDashboard(@PathVariable("site") String site, @PathVariable("season") String season) {
+
+		List<PondInfo> pondInfoList = new ArrayList<>();
+
+		List<Pond> pondList = getPondList();
+		List<Feed> feedList = getFeedList("");
+		List<Stock> stockList = getStockList();
+		List<Sampling> samplingList = getSamplingList();
+		List<Supplement> supplementList = getSupplementList();
+		List<Harvest> harvestList = getHarvestList();
+
+		pondInfoList = pondList.stream()
+				.filter(pond -> pond.getSite().equalsIgnoreCase(site) && pond.getSeason().equalsIgnoreCase(season))
+				.map(obj -> {
+
+					PondInfo info = new PondInfo();
+
+					info.setStock(stockList.stream().filter(
+							s -> s.getPond().equals(obj.getNumber()) && s.getSite().equalsIgnoreCase(obj.getSite()))
+							.findFirst().get());
+
+					info.setFeed(feedList.stream().filter(
+							f -> f.getSite().equalsIgnoreCase(obj.getSite()) && f.getPond().equals(obj.getNumber()))
+							.collect(Collectors.toList()));
+
+					info.setSupplement(supplementList.stream().filter(
+							s -> s.getPond().equals(obj.getNumber()) && s.getSite().equalsIgnoreCase(obj.getSite()))
+							.collect(Collectors.toList()));
+
+					info.setHarvest(harvestList.stream().filter(
+							s -> s.getPond().equals(obj.getNumber()) && s.getSite().equalsIgnoreCase(obj.getSite()))
+							.collect(Collectors.toList()));
+
+					info.setSampling(samplingList.stream().filter(
+							s -> s.getPond().equals(obj.getNumber()) && s.getSite().equalsIgnoreCase(obj.getSite()))
+							.collect(Collectors.toList()));
+
+					Double total = info.getFeed().stream().mapToDouble(a -> a.getAmount()).sum();
+					info.setFeedTotal(total.floatValue());
+					
+					System.out.println(total);
+					
+					Long days = ChronoUnit.DAYS.between(info.getStock().getDate(),LocalDate.now());
+					info.setProgressDays(days.intValue());
+
+					info.setNumber(obj.getNumber());
+					info.setSite(obj.getSite());
+					info.setSeason(obj.getSeason());
+					info.setSize(1.0);
+
+					return info;
+				}).collect(Collectors.toList());
+
+		return pondInfoList;
+
 	}
 
 	// Load Data
@@ -89,6 +162,12 @@ public class ShrimpFarmController {
 	@RequestMapping(path = "/loadStock/{pond}", method = RequestMethod.GET)
 	public List<Stock> loadStock(@PathVariable("pond") Integer pond) {
 		return util.loadStock(pond);
+	}
+
+	@RequestMapping(path = "/loadPond/{site}/{numberofponds}", method = RequestMethod.GET)
+	public List<Pond> loadPond(@PathVariable("site") String site,
+			@PathVariable("numberofponds") Integer numberofponds) {
+		return util.loadPond(site, numberofponds);
 	}
 
 	// Feed Entry Paths
@@ -213,6 +292,18 @@ public class ShrimpFarmController {
 	@RequestMapping(path = "/getHarvestList", method = RequestMethod.GET)
 	public List<Harvest> getHarvestList() {
 		return harvestRepo.findAll();
+	}
+
+	// Pond Operations
+
+	@RequestMapping(path = "/getPondList", method = RequestMethod.GET)
+	public List<Pond> getPondList() {
+		return pondRepo.findAll();
+	}
+
+	@RequestMapping(path = "/getStockList", method = RequestMethod.GET)
+	public List<Stock> getStockList() {
+		return stockRepo.findAll();
 	}
 
 }

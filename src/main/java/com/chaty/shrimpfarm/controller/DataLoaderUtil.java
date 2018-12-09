@@ -10,12 +10,14 @@ import org.springframework.stereotype.Component;
 import com.chaty.shrimpfarm.controller.utils.FeedChart;
 import com.chaty.shrimpfarm.model.Feed;
 import com.chaty.shrimpfarm.model.Harvest;
+import com.chaty.shrimpfarm.model.Pond;
 import com.chaty.shrimpfarm.model.Sampling;
 import com.chaty.shrimpfarm.model.Stock;
 import com.chaty.shrimpfarm.model.Supplement;
 import com.chaty.shrimpfarm.repository.ExpenseRepo;
 import com.chaty.shrimpfarm.repository.FeedRepo;
 import com.chaty.shrimpfarm.repository.HarvestRepo;
+import com.chaty.shrimpfarm.repository.PondRepo;
 import com.chaty.shrimpfarm.repository.SamplingRepo;
 import com.chaty.shrimpfarm.repository.StockRepo;
 import com.chaty.shrimpfarm.repository.SupplementRepo;
@@ -40,6 +42,9 @@ public class DataLoaderUtil {
 
 	@Autowired
 	SamplingRepo samplingRepo;
+	
+	@Autowired
+	PondRepo pondRepo;
 
 	//private static List<String> feedList = Arrays.asList("1", "2", "3S", "3P", "4S");
 	//private static List<String> seasonList = Arrays.asList("Winter", "Summer", "Rainy");
@@ -47,6 +52,25 @@ public class DataLoaderUtil {
 	//private static List<String> feedTime = Arrays.asList("Morning", "Afternoon", "Evening", "Night");
 	//private static List<String> siteList = Arrays.asList("Magani", "Thotamala", "Doruvukatta", "Thippa");
 
+	
+	public List<Pond> loadPond(String site,int num){
+		
+		List<Pond> pondList = new ArrayList<>();
+
+		for (Integer i = 1; i <= num; i++) {
+			Pond pond = new Pond();
+			pond.setSite(site);
+			pond.setNumber(i.toString());
+			pond.setSeason("Summer");
+			pondList.add(pond);
+		}
+
+		pondList.stream().forEach(a -> pondRepo.save(a));
+
+		return pondList;
+		
+	}
+	
 	public List<Feed> loadFeed(String pond, int stock) {
 
 		List<Feed> feedLoadList = FeedChart.fillFeed(pond, stock);
@@ -107,7 +131,7 @@ public class DataLoaderUtil {
 			stock.setSite("Doruvukatta");
 			stock.setPond(i.toString());
 			stock.setAmount(250000);
-			stock.setDate(LocalDate.now().withYear(2017).withMonth(3).withDayOfMonth(6));
+			stock.setDate(LocalDate.now().withYear(2018).withMonth(11).withDayOfMonth(6));
 			stock.setHatchery("Mahalakshmi");
 			stock.setSalinity(22);
 			stock.setPlSize(18);

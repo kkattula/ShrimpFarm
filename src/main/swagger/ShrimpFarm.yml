@@ -129,7 +129,7 @@ paths:
           schema:
             $ref: '#/definitions/Error'
             
-  /saleEntry:
+  /harvestEntry:
     post:
       summary: Post Sale Entry
       description: |
@@ -160,7 +160,13 @@ definitions:
         description: Monfo DB ID
       number:
         type: string
-        description: Unique identifier representing a specific product for a given latitude & longitude. For example, uberX in San Francisco will have a different product_id than uberX in Los Angeles.
+        description: Unique identifier representing a pond.
+      season:
+        type: string
+        description: Feeding season format 2017-02.
+      site:
+        type: string
+        description: Site where Pond is.
       size:
         type: string
         description: size of pond in acres.
