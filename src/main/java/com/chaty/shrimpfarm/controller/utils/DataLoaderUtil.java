@@ -1,4 +1,4 @@
-package com.chaty.shrimpfarm.controller;
+package com.chaty.shrimpfarm.controller.utils;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -7,7 +7,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.chaty.shrimpfarm.controller.utils.FeedChart;
 import com.chaty.shrimpfarm.model.Feed;
 import com.chaty.shrimpfarm.model.Harvest;
 import com.chaty.shrimpfarm.model.Pond;

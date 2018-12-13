@@ -21,8 +21,3 @@ spring:
       database: petstorerbc
       username: chaty
       password: chaty
-
-
-security:
-  ignored:
-  - "*.bundle.*"
