@@ -10,17 +10,13 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import javax.validation.Valid;
-import javax.ws.rs.QueryParam;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.chaty.shrimpfarm.model.Expense;
+import com.chaty.shrimpfarm.controller.utils.DataLoaderUtil;
 import com.chaty.shrimpfarm.model.Feed;
 import com.chaty.shrimpfarm.model.Harvest;
 import com.chaty.shrimpfarm.model.Pond;
@@ -84,12 +80,12 @@ public class ShrimpFarmController {
 
 		List<PondInfo> pondInfoList = new ArrayList<>();
 
-		List<Pond> pondList = getPondList();
-		List<Feed> feedList = getFeedList("");
-		List<Stock> stockList = getStockList();
-		List<Sampling> samplingList = getSamplingList();
-		List<Supplement> supplementList = getSupplementList();
-		List<Harvest> harvestList = getHarvestList();
+		List<Pond> pondList = pondRepo.findAll();
+		List<Feed> feedList = feedEntryRepo.findAll();
+		List<Stock> stockList = stockRepo.findAll();
+		List<Sampling> samplingList = samplingRepo.findAll();
+		List<Supplement> supplementList = supplementRepo.findAll();
+		List<Harvest> harvestList = harvestRepo.findAll();
 
 		pondInfoList = pondList.stream()
 				.filter(pond -> pond.getSite().equalsIgnoreCase(site) && pond.getSeason().equalsIgnoreCase(season))
@@ -169,140 +165,11 @@ public class ShrimpFarmController {
 		return util.loadPond(site, numberofponds);
 	}
 
-	// Feed Entry Paths
-
-	@RequestMapping(path = "/feedEntry", method = RequestMethod.POST)
-	public Feed addFeedEntry(@Valid @RequestBody Feed entry) {
-		return feedEntryRepo.save(entry);
-	}
-
-	@RequestMapping(path = "/addFeedList", method = RequestMethod.POST)
-	public void addFeedEntryList(@Valid @RequestBody List<Feed> entry) {
-		entry.stream().forEach(a -> feedEntryRepo.save(a));
-	}
-
-	@RequestMapping(path = "/getFeed/{id}", method = RequestMethod.GET)
-	public Feed getFeedEntry(@PathVariable("id") String id) {
-		return feedEntryRepo.findOne(id);
-	}
-
-	@RequestMapping(path = "/deleteFeed/{id}", method = RequestMethod.DELETE)
-	public void deleteFeedEntry(@PathVariable("id") String id) {
-		final Feed feed = feedEntryRepo.findOne(id);
-		feedEntryRepo.delete(feed);
-	}
-
-	@RequestMapping(path = "/getFeedList", method = RequestMethod.GET)
-	public List<Feed> getFeedList(@QueryParam("pond") String pond) {
-		if (pond != null & pond != "") {
-			return feedEntryRepo.findAll().stream().filter(a -> a.getPond().equals(pond)).collect(Collectors.toList());
-		} else {
-			return feedEntryRepo.findAll();
-		}
-	}
-
-	// Expense Entry Paths
-
-	@RequestMapping(path = "/expenseEntry", method = RequestMethod.POST)
-	public Expense addExpenseEntry(@Valid @RequestBody Expense entry) {
-		return expenseRepo.save(entry);
-	}
-
-	@RequestMapping(path = "/addExpenseList", method = RequestMethod.POST)
-	public void addExpenseList(@Valid @RequestBody List<Expense> entry) {
-		entry.stream().forEach(a -> expenseRepo.save(a));
-	}
-
-	@RequestMapping(path = "/deleteExpense/{id}", method = RequestMethod.DELETE)
-	public void deleteExpense(@PathVariable("id") String id) {
-		final Expense feed = expenseRepo.findOne(id);
-		expenseRepo.delete(feed);
-	}
-
-	@RequestMapping(path = "/getExpenseList", method = RequestMethod.GET)
-	public List<Expense> getExpenseList() {
-		return expenseRepo.findAll();
-	}
-
-	// Sampling Entry Paths
-
-	@RequestMapping(path = "/samplingEntry", method = RequestMethod.POST)
-	public Sampling addSamplingEntry(@Valid @RequestBody Sampling entry) {
-		return samplingRepo.save(entry);
-	}
-
-	@RequestMapping(path = "/addSamplingList", method = RequestMethod.POST)
-	public void addSamplingList(@Valid @RequestBody List<Sampling> entry) {
-		entry.stream().forEach(a -> samplingRepo.save(a));
-	}
-
-	@RequestMapping(path = "/deleteSampling/{id}", method = RequestMethod.DELETE)
-	public void deleteSampling(@PathVariable("id") String id) {
-		final Sampling feed = samplingRepo.findOne(id);
-		samplingRepo.delete(feed);
-	}
-
-	@RequestMapping(path = "/getSamplingList", method = RequestMethod.GET)
-	public List<Sampling> getSamplingList() {
-		return samplingRepo.findAll();
-	}
-
-	// Supplement Entry Paths
-
-	@RequestMapping(path = "/supplementEntry", method = RequestMethod.POST)
-	public Supplement addSupplementEntry(@Valid @RequestBody Supplement entry) {
-		return supplementRepo.save(entry);
-	}
-
-	@RequestMapping(path = "/addSupplementList", method = RequestMethod.POST)
-	public void addSupplementList(@Valid @RequestBody List<Supplement> entry) {
-		entry.stream().forEach(a -> supplementRepo.save(a));
-	}
-
-	@RequestMapping(path = "/deleteSupplement/{id}", method = RequestMethod.DELETE)
-	public void deleteSupplement(@PathVariable("id") String id) {
-		final Supplement feed = supplementRepo.findOne(id);
-		supplementRepo.delete(feed);
-	}
-
-	@RequestMapping(path = "/getSupplementList", method = RequestMethod.GET)
-	public List<Supplement> getSupplementList() {
-		return supplementRepo.findAll();
-	}
-
-	// Harvest Entry Paths
-
-	@RequestMapping(path = "/harvestEntry", method = RequestMethod.POST)
-	public Harvest addharvestEntry(@Valid @RequestBody Harvest entry) {
-		return harvestRepo.save(entry);
-	}
-
-	@RequestMapping(path = "/addHarvestList", method = RequestMethod.POST)
-	public void addharvestList(@Valid @RequestBody List<Harvest> entry) {
-		entry.stream().forEach(a -> harvestRepo.save(a));
-	}
-
-	@RequestMapping(path = "/deleteHarvest/{id}", method = RequestMethod.DELETE)
-	public void deleteharvest(@PathVariable("id") String id) {
-		final Harvest feed = harvestRepo.findOne(id);
-		harvestRepo.delete(feed);
-	}
-
-	@RequestMapping(path = "/getHarvestList", method = RequestMethod.GET)
-	public List<Harvest> getHarvestList() {
-		return harvestRepo.findAll();
-	}
-
 	// Pond Operations
 
 	@RequestMapping(path = "/getPondList", method = RequestMethod.GET)
 	public List<Pond> getPondList() {
 		return pondRepo.findAll();
-	}
-
-	@RequestMapping(path = "/getStockList", method = RequestMethod.GET)
-	public List<Stock> getStockList() {
-		return stockRepo.findAll();
 	}
 
 }
