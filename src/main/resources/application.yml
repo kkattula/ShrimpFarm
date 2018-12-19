@@ -21,3 +21,7 @@ spring:
       database: petstorerbc
       username: chaty
       password: chaty
+
+logging:
+  level:
+   com.chaty.shrimpfarm: TRACE

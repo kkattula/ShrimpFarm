@@ -10,8 +10,11 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +27,7 @@ import com.chaty.shrimpfarm.model.PondInfo;
 import com.chaty.shrimpfarm.model.Sampling;
 import com.chaty.shrimpfarm.model.Stock;
 import com.chaty.shrimpfarm.model.Supplement;
+import com.chaty.shrimpfarm.model.User;
 import com.chaty.shrimpfarm.repository.ExpenseRepo;
 import com.chaty.shrimpfarm.repository.FeedRepo;
 import com.chaty.shrimpfarm.repository.HarvestRepo;
@@ -31,6 +35,7 @@ import com.chaty.shrimpfarm.repository.PondRepo;
 import com.chaty.shrimpfarm.repository.SamplingRepo;
 import com.chaty.shrimpfarm.repository.StockRepo;
 import com.chaty.shrimpfarm.repository.SupplementRepo;
+import com.chaty.shrimpfarm.repository.UserRepo;
 
 @RestController
 @RequestMapping("/farm/api")
@@ -58,11 +63,19 @@ public class ShrimpFarmController {
 	StockRepo stockRepo;
 
 	@Autowired
+	UserRepo userRepo;
+
+	@Autowired
 	DataLoaderUtil util;
 
 	@RequestMapping("/user")
 	public Principal user(Principal user) {
 		return user;
+	}
+
+	@RequestMapping(path = "/createUser", method = RequestMethod.POST)
+	public User user(@Valid @RequestBody User user) {
+		return userRepo.save(user);
 	}
 
 	@RequestMapping("/resource")
