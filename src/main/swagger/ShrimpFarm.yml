@@ -149,7 +149,28 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  
+
+  /createUser:
+    post:
+      summary: Create Account
+      description: |
+        This endpoint creates an account.
+      parameters:
+        - name: SaleEntry
+          in: body
+          description: Account Object to be added.
+          schema:
+            $ref: '#/definitions/UserData'
+      tags:
+        - Profile
+      responses:
+        200:
+          description: Account Entry Added Sucessfully.
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+            
 definitions:
 
   Pond:
@@ -385,7 +406,67 @@ definitions:
         type: integer
         format: int32
         description: Expected shrimp weight.
-     
+  
+  UserData:
+    type: object
+    properties:
+      _id:
+        type: string
+        description: Monfo DB ID
+      username:
+        type: string
+        description: Name.
+      dateCreated:
+        type: string
+        description: Date Created
+      email:
+        type: string
+        description: Email.
+      image:
+        type: string
+        description: Image URL.
+      nickname:
+        type: string
+        description: pond nickname.
+      token:
+        type: string
+        description: account token.
+      status:
+        type: string
+        description: Current Account Status Active/Not.
+      roles:
+        type: array
+        items:
+          type: string
+      farms:
+        type: array
+        items:
+          $ref: '#/definitions/Farm'
+  
+  
+  Farm:
+    type: object
+    properties:
+      ponds:
+        type: array
+        items:
+           $ref: '#/definitions/Pond'
+      aerators:
+        type: integer
+        format: int32
+        description: Number od Aerators.
+      generators:
+        type: integer
+        format: int32
+        description: Generators.
+      currentStock:
+        type: integer
+        description: Current Stock.
+      expWeight:
+        type: integer
+        format: int32
+        description: Expected shrimp weight.
+        
   Error:
     type: object
     properties:
