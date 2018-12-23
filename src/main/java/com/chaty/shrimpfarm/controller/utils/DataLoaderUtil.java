@@ -59,7 +59,7 @@ public class DataLoaderUtil {
 		for (Integer i = 1; i <= num; i++) {
 			Pond pond = new Pond();
 			pond.setSite(site);
-			pond.setNumber(i.toString());
+			pond.setNumber(i);
 			pond.setSeason("Summer");
 			pondList.add(pond);
 		}
@@ -128,7 +128,7 @@ public class DataLoaderUtil {
 		for (Integer i = 1; i <= num; i++) {
 			Stock stock = new Stock();
 			stock.setSite("Doruvukatta");
-			stock.setPond(i.toString());
+			stock.setPond(i);
 			stock.setAmount(250000);
 			stock.setDate(LocalDate.now().withYear(2018).withMonth(11).withDayOfMonth(6));
 			stock.setHatchery("Mahalakshmi");

@@ -8,5 +8,6 @@ import com.chaty.shrimpfarm.model.User;
 @RepositoryRestResource(collectionResourceRel = "user", path = "user")
 public interface UserRepo extends MongoRepository<User, String> {
 	User findByUsername(String username);
+	User findByEmail(String email);
 
 }

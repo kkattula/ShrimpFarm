@@ -23,7 +23,7 @@ public class SamplingController {
 	@Autowired
 	SamplingRepo samplingRepo;
 
-	@RequestMapping(path = "/", method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)
 	public Sampling addSamplingEntry(@Valid @RequestBody Sampling entry) {
 		return samplingRepo.save(entry);
 	}

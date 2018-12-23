@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,15 +21,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chaty.shrimpfarm.controller.utils.DataLoaderUtil;
+import com.chaty.shrimpfarm.model.Farm;
 import com.chaty.shrimpfarm.model.Feed;
 import com.chaty.shrimpfarm.model.Harvest;
 import com.chaty.shrimpfarm.model.Pond;
-import com.chaty.shrimpfarm.model.PondInfo;
 import com.chaty.shrimpfarm.model.Sampling;
 import com.chaty.shrimpfarm.model.Stock;
 import com.chaty.shrimpfarm.model.Supplement;
 import com.chaty.shrimpfarm.model.User;
 import com.chaty.shrimpfarm.repository.ExpenseRepo;
+import com.chaty.shrimpfarm.repository.FarmRepo;
 import com.chaty.shrimpfarm.repository.FeedRepo;
 import com.chaty.shrimpfarm.repository.HarvestRepo;
 import com.chaty.shrimpfarm.repository.PondRepo;
@@ -66,6 +68,9 @@ public class ShrimpFarmController {
 	UserRepo userRepo;
 
 	@Autowired
+	FarmRepo farmRepo;
+
+	@Autowired
 	DataLoaderUtil util;
 
 	@RequestMapping("/user")
@@ -76,6 +81,12 @@ public class ShrimpFarmController {
 	@RequestMapping(path = "/createUser", method = RequestMethod.POST)
 	public User user(@Valid @RequestBody User user) {
 		return userRepo.save(user);
+	}
+
+	@RequestMapping(path = "/userData/{query}", method = RequestMethod.GET)
+	public User userData(@PathVariable("query") String query) {
+		query = new String(Base64.getDecoder().decode(query));
+		return userRepo.findByEmail(query);
 	}
 
 	@RequestMapping("/resource")
@@ -89,9 +100,9 @@ public class ShrimpFarmController {
 	// Dashboard Data
 
 	@RequestMapping(path = "/getDashboard/{site}/{season}", method = RequestMethod.GET)
-	public List<PondInfo> getDashboard(@PathVariable("site") String site, @PathVariable("season") String season) {
+	public List<Pond> getDashboard(@PathVariable("site") String site, @PathVariable("season") String season) {
 
-		List<PondInfo> pondInfoList = new ArrayList<>();
+		List<Pond> pondInfoList = new ArrayList<>();
 
 		List<Pond> pondList = pondRepo.findAll();
 		List<Feed> feedList = feedEntryRepo.findAll();
@@ -104,7 +115,7 @@ public class ShrimpFarmController {
 				.filter(pond -> pond.getSite().equalsIgnoreCase(site) && pond.getSeason().equalsIgnoreCase(season))
 				.map(obj -> {
 
-					PondInfo info = new PondInfo();
+					Pond info = new Pond();
 
 					info.setStock(stockList.stream().filter(
 							s -> s.getPond().equals(obj.getNumber()) && s.getSite().equalsIgnoreCase(obj.getSite()))
@@ -180,9 +191,28 @@ public class ShrimpFarmController {
 
 	// Pond Operations
 
-	@RequestMapping(path = "/getPondList", method = RequestMethod.GET)
+	@RequestMapping(path = "/pond/list", method = RequestMethod.GET)
 	public List<Pond> getPondList() {
 		return pondRepo.findAll();
+	}
+
+	@RequestMapping(path = "/pond/list", method = RequestMethod.POST)
+	public List<Pond> addPondList(@Valid @RequestBody List<Pond> pondList) {
+		List<Pond> addedList = pondList.stream().map(a -> pondRepo.save(a)).collect(Collectors.toList());
+		return addedList;
+	}
+
+	// Farm Operations
+
+	@RequestMapping(path = "/farm/list", method = RequestMethod.GET)
+	public List<Farm> getFarmList() {
+		return farmRepo.findAll();
+	}
+
+	@RequestMapping(path = "/farm/list", method = RequestMethod.POST)
+	public List<Farm> getFarmList(@Valid @RequestBody List<Farm> farmList) {
+		List<Farm> addedList = farmList.stream().map(a -> farmRepo.save(a)).collect(Collectors.toList());
+		return addedList;
 	}
 
 }
