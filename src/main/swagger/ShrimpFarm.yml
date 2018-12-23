@@ -173,15 +173,13 @@ paths:
             
 definitions:
 
-  Pond:
+  PondInfo:
     type: object
     properties:
-      _id:
-        type: string
-        description: Monfo DB ID
       number:
-        type: string
-        description: Unique identifier representing a pond.
+        type: integer
+        format: int32
+        description: identifier representing a pond.
       season:
         type: string
         description: Feeding season format 2017-02.
@@ -200,6 +198,10 @@ definitions:
       feed:
         type: string
         description: Current Feed Consumption
+      progressDays:
+        type: integer
+        format: int32
+        description: Current Progress
       status:
         type: string
         description: Current Pond Status Good/Bad/Shit/BatShit.
@@ -211,7 +213,8 @@ definitions:
         type: string
         description: Monfo DB ID
       pond:
-        type: string
+        type: integer
+        format: int32
         description: Pond number
       date:
         type: string
@@ -242,7 +245,8 @@ definitions:
         type: string
         description: Monfo DB ID
       pond:
-        type: string
+        type: integer
+        format: int32
         description: Pond number
       date:
         type: string
@@ -273,7 +277,8 @@ definitions:
         type: string
         description: Monfo DB ID
       pond:
-        type: string
+        type: integer
+        format: int32
         description: Pond number
       date:
         type: string
@@ -285,16 +290,19 @@ definitions:
         type: string
         description: Site where Pond is.
       salinity:
-        type: number
+        type: integer
+        format: int32
         description: Water Salinity.
       amount:
-        type: number
+        type: integer
+        format: int32
         description: number of seed.
       hatchery:
         type: string
         description: Hatchery where seed is bought.
       plSize:
         type: integer
+        format: int32
         description: Post Larva Size. 
         
   HarvestEntry:
@@ -304,7 +312,8 @@ definitions:
         type: string
         description: Monfo DB ID
       pondNumber:
-        type: string
+        type: integer
+        format: int32
         description: Pond number
       date:
         type: string
@@ -319,13 +328,16 @@ definitions:
         type: boolean
         description: Is Planned Harvest.
       tonnage:
-        type: number
+        type: integer
+        format: int32
         description: Tonnage in kilograms.
       countPrice:
-        type: number
+        type: integer
+        format: int32
         description: Price of Harvested count Size.
       amount:
-        type: number
+        type: integer
+        format: int32
         description: Total Harvest Amount
       comments:
         type: string
@@ -351,6 +363,7 @@ definitions:
         description: Yes/No
       price:
         type: integer
+        format: int32
         description: expense price in rupees.
       date:
         type: string
@@ -441,16 +454,19 @@ definitions:
       farms:
         type: array
         items:
-          $ref: '#/definitions/Farm'
+          $ref: '#/definitions/FarmInfo'
   
   
-  Farm:
+  FarmInfo:
     type: object
     properties:
+      name:
+        type: string
+        description: Name
       ponds:
         type: array
         items:
-           $ref: '#/definitions/Pond'
+           $ref: '#/definitions/PondInfo'
       aerators:
         type: integer
         format: int32

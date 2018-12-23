@@ -23,7 +23,7 @@ public class HarvestController {
 	HarvestRepo harvestRepo;
 	
 
-	@RequestMapping(path = "/", method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)
 	public Harvest addharvestEntry(@Valid @RequestBody Harvest entry) {
 		return harvestRepo.save(entry);
 	}

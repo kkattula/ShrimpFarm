@@ -22,7 +22,7 @@ public class ExpenseController {
 	ExpenseRepo expenseRepo;
 
 
-	@RequestMapping(path = "/", method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)
 	public Expense addExpenseEntry(@Valid @RequestBody Expense entry) {
 		return expenseRepo.save(entry);
 	}

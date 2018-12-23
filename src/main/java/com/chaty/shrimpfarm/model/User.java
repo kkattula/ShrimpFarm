@@ -30,6 +30,6 @@ public class User {
 
 	public List<String> roles;
 	
-	public List<Farm> farm;
+	public List<FarmInfo> farms;
 
 }

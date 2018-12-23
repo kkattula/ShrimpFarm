@@ -19,8 +19,8 @@ public class MongoUserDetailsService implements UserDetailsService {
 	private UserRepo repository;
 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		com.chaty.shrimpfarm.model.User user = repository.findByUsername(username);
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+		com.chaty.shrimpfarm.model.User user = repository.findByEmail(email);
 
 		if (user == null) {
 			throw new UsernameNotFoundException("User not found");
@@ -28,6 +28,6 @@ public class MongoUserDetailsService implements UserDetailsService {
 
 		List<SimpleGrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority("user"));
 
-		return new User(user.getUsername(), user.getToken(), authorities);
+		return new User(user.getEmail(), user.getToken(), authorities);
 	}
 }
