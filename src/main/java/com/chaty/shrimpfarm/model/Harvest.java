@@ -14,23 +14,23 @@ public class Harvest {
 	@Id
 	private String _id;
 
-	private String pond = null;
+	private String pond;
 
-	private String site = null;
+	private String site;
 
-	private String season = null;
+	private String season;
 
-	private String planned = null;
+	private String planned;
 
-	private Double tonnage = null;
+	private Double tonnage;
 
-	private Integer count = null;
+	private Integer count;
 
-	private String buyer = null;
+	private String buyer;
 
-	private LocalDate date = null;
+	private LocalDate date;
 
-	private String comments = null;
+	private String comments;
 
-	private Double countPrice = null;
+	private Double countPrice;
 }

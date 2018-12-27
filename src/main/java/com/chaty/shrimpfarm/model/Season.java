@@ -24,5 +24,7 @@ public class Season {
     private String status;
     
     private LocalDate startDate;
+    
+    private String uuid;
 
 }

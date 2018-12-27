@@ -180,6 +180,9 @@ definitions:
         type: integer
         format: int32
         description: identifier representing a pond.
+      uuid: 
+        type: string
+        description: Name
       season:
         type: string
         description: Feeding season format 2017-02.
@@ -312,8 +315,7 @@ definitions:
         type: string
         description: Monfo DB ID
       pondNumber:
-        type: integer
-        format: int32
+        type: string
         description: Pond number
       date:
         type: string
@@ -368,6 +370,9 @@ definitions:
       date:
         type: string
         description: mm/dd/yyyy expense date.
+      season:
+        type: string
+        description: Expense Season/Crop
       comments:
         type: string
         description: paid by/paid to/cash/bank/cheque
@@ -460,6 +465,9 @@ definitions:
   FarmInfo:
     type: object
     properties:
+      uuid: 
+        type: string
+        description: Name
       name:
         type: string
         description: Name
