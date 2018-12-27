@@ -25,7 +25,9 @@ import com.chaty.shrimpfarm.model.Farm;
 import com.chaty.shrimpfarm.model.Feed;
 import com.chaty.shrimpfarm.model.Harvest;
 import com.chaty.shrimpfarm.model.Pond;
+import com.chaty.shrimpfarm.model.PondSummary;
 import com.chaty.shrimpfarm.model.Sampling;
+import com.chaty.shrimpfarm.model.Season;
 import com.chaty.shrimpfarm.model.Stock;
 import com.chaty.shrimpfarm.model.Supplement;
 import com.chaty.shrimpfarm.model.User;
@@ -35,6 +37,7 @@ import com.chaty.shrimpfarm.repository.FeedRepo;
 import com.chaty.shrimpfarm.repository.HarvestRepo;
 import com.chaty.shrimpfarm.repository.PondRepo;
 import com.chaty.shrimpfarm.repository.SamplingRepo;
+import com.chaty.shrimpfarm.repository.SeasonRepo;
 import com.chaty.shrimpfarm.repository.StockRepo;
 import com.chaty.shrimpfarm.repository.SupplementRepo;
 import com.chaty.shrimpfarm.repository.UserRepo;
@@ -69,6 +72,9 @@ public class ShrimpFarmController {
 
 	@Autowired
 	FarmRepo farmRepo;
+	
+	@Autowired
+	SeasonRepo seasonRepo;
 
 	@Autowired
 	DataLoaderUtil util;
@@ -100,41 +106,40 @@ public class ShrimpFarmController {
 	// Dashboard Data
 
 	@RequestMapping(path = "/getDashboard/{site}/{season}", method = RequestMethod.GET)
-	public List<Pond> getDashboard(@PathVariable("site") String site, @PathVariable("season") String season) {
+	public List<PondSummary> getDashboard(@PathVariable("site") String site, @PathVariable("season") String season) {
 
-		List<Pond> pondInfoList = new ArrayList<>();
+		List<PondSummary> pondInfoList = new ArrayList<>();
 
-		List<Pond> pondList = pondRepo.findAll();
+		List<Season> seasonList = seasonRepo.findByFarmUUID(site);
 		List<Feed> feedList = feedEntryRepo.findAll();
 		List<Stock> stockList = stockRepo.findAll();
 		List<Sampling> samplingList = samplingRepo.findAll();
 		List<Supplement> supplementList = supplementRepo.findAll();
 		List<Harvest> harvestList = harvestRepo.findAll();
 
-		pondInfoList = pondList.stream()
-				.filter(pond -> pond.getSite().equalsIgnoreCase(site) && pond.getSeason().equalsIgnoreCase(season))
+		pondInfoList = seasonList.get(0).getPonds().stream()
 				.map(obj -> {
 
-					Pond info = new Pond();
+					PondSummary info = new PondSummary();
 
 					info.setStock(stockList.stream().filter(
-							s -> s.getPond().equals(obj.getNumber()) && s.getSite().equalsIgnoreCase(obj.getSite()))
+							s -> s.getSeason().equals(season) && s.getPond().equals(obj.getUuid()))
 							.findFirst().get());
 
 					info.setFeed(feedList.stream().filter(
-							f -> f.getSite().equalsIgnoreCase(obj.getSite()) && f.getPond().equals(obj.getNumber()))
+							s -> s.getSeason().equals(season) && s.getPond().equals(obj.getUuid()))
 							.collect(Collectors.toList()));
 
 					info.setSupplement(supplementList.stream().filter(
-							s -> s.getPond().equals(obj.getNumber()) && s.getSite().equalsIgnoreCase(obj.getSite()))
+							s -> s.getSeason().equals(season) && s.getPond().equals(obj.getUuid()))
 							.collect(Collectors.toList()));
 
 					info.setHarvest(harvestList.stream().filter(
-							s -> s.getPond().equals(obj.getNumber()) && s.getSite().equalsIgnoreCase(obj.getSite()))
+							s -> s.getSeason().equals(season) && s.getPond().equals(obj.getUuid()))
 							.collect(Collectors.toList()));
 
 					info.setSampling(samplingList.stream().filter(
-							s -> s.getPond().equals(obj.getNumber()) && s.getSite().equalsIgnoreCase(obj.getSite()))
+							s -> s.getSeason().equals(season) && s.getPond().equals(obj.getUuid()))
 							.collect(Collectors.toList()));
 
 					Double total = info.getFeed().stream().mapToDouble(a -> a.getAmount()).sum();
@@ -163,24 +168,28 @@ public class ShrimpFarmController {
 		return util.loadFeed(pond, stock, site, season);
 	}
 
-	@RequestMapping(path = "/loadHarvest/{pond}", method = RequestMethod.GET)
-	public List<Harvest> loadHarvest(@PathVariable("pond") Integer pond) {
-		return util.loadHarvest(pond);
+	@RequestMapping(path = "/loadHarvest/{pond}/{site}/{season}", method = RequestMethod.GET)
+	public List<Harvest> loadHarvest(@PathVariable("pond") String pond, @PathVariable("site") String site,
+			@PathVariable("season") String season) {
+		return util.loadHarvest(pond, site, season);
 	}
 
-	@RequestMapping(path = "/loadSupplement/{pond}", method = RequestMethod.GET)
-	public List<Supplement> loadSupplement(@PathVariable("pond") Integer pond) {
-		return util.loadSupplement(pond);
+	@RequestMapping(path = "/loadSupplement/{pond}/{site}/{season}", method = RequestMethod.GET)
+	public List<Supplement> loadSupplement(@PathVariable("pond") String pond,
+			@PathVariable("site") String site, @PathVariable("season") String season) {
+		return util.loadSupplement(pond, site, season);
 	}
 
-	@RequestMapping(path = "/loadSampling/{pond}", method = RequestMethod.GET)
-	public List<Sampling> loadSampling(@PathVariable("pond") Integer pond) {
-		return util.loadSampling(pond);
+	@RequestMapping(path = "/loadSampling/{pond}/{site}/{season}", method = RequestMethod.GET)
+	public List<Sampling> loadSampling(@PathVariable("pond") String pond, @PathVariable("site") String site,
+			@PathVariable("season") String season) {
+		return util.loadSampling(pond, site, season);
 	}
 
-	@RequestMapping(path = "/loadStock/{pond}", method = RequestMethod.GET)
-	public List<Stock> loadStock(@PathVariable("pond") Integer pond) {
-		return util.loadStock(pond);
+	@RequestMapping(path = "/loadStock/{pond}/{site}/{season}", method = RequestMethod.GET)
+	public List<Stock> loadStock(@PathVariable("pond") String pond, @PathVariable("site") String site,
+			@PathVariable("season") String season) {
+		return util.loadStock(pond, site, season);
 	}
 
 	@RequestMapping(path = "/loadPond/{site}/{numberofponds}", method = RequestMethod.GET)

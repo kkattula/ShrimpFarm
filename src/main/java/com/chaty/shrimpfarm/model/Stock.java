@@ -14,7 +14,7 @@ public class Stock {
 	@Id
 	private String _id;
 	
-	private Integer pond;
+	private String pond;
 
 	private LocalDate date;
 

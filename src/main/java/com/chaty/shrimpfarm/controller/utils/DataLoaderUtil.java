@@ -44,6 +44,7 @@ public class DataLoaderUtil {
 	
 	@Autowired
 	PondRepo pondRepo;
+	
 
 	//private static List<String> feedList = Arrays.asList("1", "2", "3S", "3P", "4S");
 	//private static List<String> seasonList = Arrays.asList("Winter", "Summer", "Rainy");
@@ -79,17 +80,18 @@ public class DataLoaderUtil {
 	}
 	
 	
-	public List<Supplement> loadSupplement(int num) {
+	public List<Supplement> loadSupplement(String pond,String site,String season) {
 
 		List<Supplement> samplingList = new ArrayList<>();
 
-		for (Integer i = 1; i <= num; i++) {
+		for (Integer i = 1; i <= 8; i++) {
 			Supplement supplement = new Supplement();
-			supplement.setSite("Doruvukatta");
-			supplement.setPond(i.toString());
+			supplement.setSite(site);
+			supplement.setPond(pond);
 			supplement.setAmount(25.00);
-			supplement.setDate(LocalDate.now().withYear(2017).withMonth(3).withDayOfMonth(6));
-			supplement.setSeason("Summer");
+			supplement.setDate(LocalDate.now().withYear(2018).withMonth(2).withDayOfMonth(7));
+			supplement.setSeason(season);
+			supplement.setType("Probiotics");
 			samplingList.add(supplement);
 		}
 
@@ -100,17 +102,17 @@ public class DataLoaderUtil {
 	}
 	
 	
-	public List<Sampling> loadSampling(int num) {
+	public List<Sampling> loadSampling(String pond,String site,String season) {
 
 		List<Sampling> samplingList = new ArrayList<>();
 
-		for (Integer i = 1; i <= num; i++) {
+		for (Integer i = 1; i <= 8; i++) {
 			Sampling sampling = new Sampling();
-			sampling.setSite("Doruvukatta");
-			sampling.setPond("1");
+			sampling.setSite(site);
+			sampling.setPond(pond);
 			sampling.setCount("150");
-			sampling.setDate(LocalDate.now().withYear(2017).withMonth(3).withDayOfMonth(6));
-			sampling.setSeason("Summer");
+			sampling.setDate(LocalDate.now().withYear(2018).withMonth(2).withDayOfMonth(1));
+			sampling.setSeason(season);
 			sampling.setTime("Morning");
 			samplingList.add(sampling);
 		}
@@ -121,20 +123,20 @@ public class DataLoaderUtil {
 
 	}
 
-	public List<Stock> loadStock(int num) {
+	public List<Stock> loadStock(String pond,String site,String season) {
 
 		List<Stock> stockList = new ArrayList<>();
 
-		for (Integer i = 1; i <= num; i++) {
+		for (Integer i = 1; i <= 5; i++) {
 			Stock stock = new Stock();
-			stock.setSite("Doruvukatta");
-			stock.setPond(i);
+			stock.setSite(site);
+			stock.setPond(pond);
 			stock.setAmount(250000);
-			stock.setDate(LocalDate.now().withYear(2018).withMonth(11).withDayOfMonth(6));
+			stock.setDate(LocalDate.now().withYear(2018).withMonth(1).withDayOfMonth(1));
 			stock.setHatchery("Mahalakshmi");
 			stock.setSalinity(22);
 			stock.setPlSize(18);
-			stock.setSeason("Summer");
+			stock.setSeason(season);
 			stockList.add(stock);
 		}
 
@@ -144,20 +146,20 @@ public class DataLoaderUtil {
 
 	}
 
-	public List<Harvest> loadHarvest(int num) {
+	public List<Harvest> loadHarvest(String pond,String site,String season) {
 
 		List<Harvest> harvestList = new ArrayList<>();
 
-		for (Integer i = 1; i <= num; i++) {
+		for (Integer i = 1; i <= 5; i++) {
 			Harvest harvest = new Harvest();
-			harvest.setSite("Doruvukatta");
-			harvest.setPond(i.toString());
+			harvest.setSite(site);
+			harvest.setPond(pond);
 			harvest.setBuyer("Ashwini");
 			harvest.setDate(LocalDate.now().withYear(2017).withMonth(3).withDayOfMonth(6));
 			harvest.setCount(65);
 			harvest.setTonnage(2800d);
 			harvest.setPlanned("YES");
-			harvest.setSeason("Summer");
+			harvest.setSeason(season);
 			harvest.setCountPrice(230d);
 			harvest.setComments("Info about harvest goes here");
 			harvestList.add(harvest);

@@ -27,4 +27,6 @@ public class Expense {
 	private float price;
 
 	private String comments;
+	
+	private String season;
 }

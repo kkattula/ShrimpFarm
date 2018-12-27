@@ -50,13 +50,12 @@ public class FeedChart {
 		for (int i = 0; i <= 29; i++) {
 			for (int j = 0; j < feedTime.size(); j++) {
 				Feed feed = new Feed();
-				feed.setPond("1");
 				float f = feedModelList.get(i).getAmount() * stockinMills;
 				feed.setAmount(f / 1000);
 				feed.setType(feedModelList.get(i).getFeedType());
 				feed.setTime(feedTime.get(j));
 				feed.setPond(pondNumber);
-				feed.setDate(LocalDate.now().withMonth(1).withDayOfMonth(i + 1));
+				feed.setDate(LocalDate.now().withYear(2018).withMonth(1).withDayOfMonth(i + 1));
 				feed.setCheck(false);
 				feed.setSeason(season);
 				feed.setSite(site);
