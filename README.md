@@ -31,4 +31,9 @@ Farm Dash-board Operations - Logical Crap i need to figure out to save me god-da
 10. Statistics/Insights on the Data captured
 
 
+Design Optimization and Other features
+---------------------------------
+1. Need to Index the UUID's  -- MONGODB
+2. 
+
 

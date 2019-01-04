@@ -155,7 +155,7 @@ public class DataLoaderUtil {
 			harvest.setSite(site);
 			harvest.setPond(pond);
 			harvest.setBuyer("Ashwini");
-			harvest.setDate(LocalDate.now().withYear(2017).withMonth(3).withDayOfMonth(6));
+			harvest.setDate(LocalDate.now().withYear(2018).withMonth(2).withDayOfMonth(15));
 			harvest.setCount(65);
 			harvest.setTonnage(2800d);
 			harvest.setPlanned("YES");

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chaty.shrimpfarm.controller.utils.DataLoaderUtil;
+import com.chaty.shrimpfarm.farmloader.CAAFarmLoader;
 import com.chaty.shrimpfarm.model.Farm;
 import com.chaty.shrimpfarm.model.Feed;
 import com.chaty.shrimpfarm.model.Harvest;
@@ -72,17 +73,27 @@ public class ShrimpFarmController {
 
 	@Autowired
 	FarmRepo farmRepo;
-	
+
 	@Autowired
 	SeasonRepo seasonRepo;
 
 	@Autowired
 	DataLoaderUtil util;
+	
+	@Autowired
+	CAAFarmLoader caaUtil;
 
 	@RequestMapping("/user")
 	public Principal user(Principal user) {
 		return user;
 	}
+	
+	@RequestMapping("/loadCAA")
+	public String loadCAA() {
+		caaUtil.loadCAAFarms();
+		return "DONE";
+	}
+	
 
 	@RequestMapping(path = "/createUser", method = RequestMethod.POST)
 	public User user(@Valid @RequestBody User user) {
@@ -117,44 +128,48 @@ public class ShrimpFarmController {
 		List<Supplement> supplementList = supplementRepo.findAll();
 		List<Harvest> harvestList = harvestRepo.findAll();
 
-		pondInfoList = seasonList.get(0).getPonds().stream()
-				.map(obj -> {
+		pondInfoList = seasonList.get(0).getPonds().stream().map(obj -> {
 
-					PondSummary info = new PondSummary();
+			PondSummary info = new PondSummary();
 
-					info.setStock(stockList.stream().filter(
-							s -> s.getSeason().equals(season) && s.getPond().equals(obj.getUuid()))
-							.findFirst().get());
+			info.setStock(stockList.stream()
+					.filter(s -> s.getSeason().equals(season) && s.getPond().equals(obj.getUuid())).findFirst().get());
 
-					info.setFeed(feedList.stream().filter(
-							s -> s.getSeason().equals(season) && s.getPond().equals(obj.getUuid()))
+			info.setFeed(
+					feedList.stream().filter(s -> s.getSeason().equals(season) && s.getPond().equals(obj.getUuid()))
 							.collect(Collectors.toList()));
 
-					info.setSupplement(supplementList.stream().filter(
-							s -> s.getSeason().equals(season) && s.getPond().equals(obj.getUuid()))
+			info.setSupplement(supplementList.stream()
+					.filter(s -> s.getSeason().equals(season) && s.getPond().equals(obj.getUuid()))
+					.collect(Collectors.toList()));
+
+			info.setHarvest(
+					harvestList.stream().filter(s -> s.getSeason().equals(season) && s.getPond().equals(obj.getUuid()))
 							.collect(Collectors.toList()));
 
-					info.setHarvest(harvestList.stream().filter(
-							s -> s.getSeason().equals(season) && s.getPond().equals(obj.getUuid()))
+			info.setSampling(
+					samplingList.stream().filter(s -> s.getSeason().equals(season) && s.getPond().equals(obj.getUuid()))
 							.collect(Collectors.toList()));
 
-					info.setSampling(samplingList.stream().filter(
-							s -> s.getSeason().equals(season) && s.getPond().equals(obj.getUuid()))
-							.collect(Collectors.toList()));
+			Double total = info.getFeed().stream().mapToDouble(a -> a.getAmount()).sum();
+			info.setFeedTotal(total.floatValue());
 
-					Double total = info.getFeed().stream().mapToDouble(a -> a.getAmount()).sum();
-					info.setFeedTotal(total.floatValue());
+			if (info.getHarvest() != null && info.getHarvest().size() > 0) {
+				LocalDate harvestDate = info.getHarvest().get(0).getDate();
+				Long days = ChronoUnit.DAYS.between(info.getStock().getDate(), harvestDate);
+				info.setProgressDays(days.intValue());
+			} else {
+				Long days = ChronoUnit.DAYS.between(info.getStock().getDate(), LocalDate.now());
+				info.setProgressDays(days.intValue());
+			}
 
-					Long days = ChronoUnit.DAYS.between(info.getStock().getDate(), LocalDate.now());
-					info.setProgressDays(days.intValue());
+			info.setNumber(obj.getNumber());
+			info.setSite(obj.getSite());
+			info.setSeason(obj.getSeason());
+			info.setSize(1.0);
 
-					info.setNumber(obj.getNumber());
-					info.setSite(obj.getSite());
-					info.setSeason(obj.getSeason());
-					info.setSize(1.0);
-
-					return info;
-				}).collect(Collectors.toList());
+			return info;
+		}).collect(Collectors.toList());
 
 		return pondInfoList;
 
@@ -175,8 +190,8 @@ public class ShrimpFarmController {
 	}
 
 	@RequestMapping(path = "/loadSupplement/{pond}/{site}/{season}", method = RequestMethod.GET)
-	public List<Supplement> loadSupplement(@PathVariable("pond") String pond,
-			@PathVariable("site") String site, @PathVariable("season") String season) {
+	public List<Supplement> loadSupplement(@PathVariable("pond") String pond, @PathVariable("site") String site,
+			@PathVariable("season") String season) {
 		return util.loadSupplement(pond, site, season);
 	}
 
