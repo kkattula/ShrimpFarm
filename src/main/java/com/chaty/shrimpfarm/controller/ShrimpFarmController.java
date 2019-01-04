@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chaty.shrimpfarm.controller.utils.DataLoaderUtil;
+import com.chaty.shrimpfarm.farmloader.CAAFarm;
 import com.chaty.shrimpfarm.farmloader.CAAFarmLoader;
+import com.chaty.shrimpfarm.farmloader.State;
 import com.chaty.shrimpfarm.model.Farm;
 import com.chaty.shrimpfarm.model.Feed;
 import com.chaty.shrimpfarm.model.Harvest;
@@ -32,6 +34,7 @@ import com.chaty.shrimpfarm.model.Season;
 import com.chaty.shrimpfarm.model.Stock;
 import com.chaty.shrimpfarm.model.Supplement;
 import com.chaty.shrimpfarm.model.User;
+import com.chaty.shrimpfarm.repository.CAAFarmRepo;
 import com.chaty.shrimpfarm.repository.ExpenseRepo;
 import com.chaty.shrimpfarm.repository.FarmRepo;
 import com.chaty.shrimpfarm.repository.FeedRepo;
@@ -39,6 +42,7 @@ import com.chaty.shrimpfarm.repository.HarvestRepo;
 import com.chaty.shrimpfarm.repository.PondRepo;
 import com.chaty.shrimpfarm.repository.SamplingRepo;
 import com.chaty.shrimpfarm.repository.SeasonRepo;
+import com.chaty.shrimpfarm.repository.StateRepo;
 import com.chaty.shrimpfarm.repository.StockRepo;
 import com.chaty.shrimpfarm.repository.SupplementRepo;
 import com.chaty.shrimpfarm.repository.UserRepo;
@@ -76,6 +80,12 @@ public class ShrimpFarmController {
 
 	@Autowired
 	SeasonRepo seasonRepo;
+	
+	@Autowired
+	StateRepo stateRepo;
+	
+	@Autowired
+	CAAFarmRepo caaFarmRepo;
 
 	@Autowired
 	DataLoaderUtil util;
@@ -88,11 +98,11 @@ public class ShrimpFarmController {
 		return user;
 	}
 	
-	@RequestMapping("/loadCAA")
-	public String loadCAA() {
-		caaUtil.loadCAAFarms();
-		return "DONE";
-	}
+//	@RequestMapping("/loadCAA")
+//	public String loadCAA() {
+//		caaUtil.loadCAAFarms();
+//		return "DONE";
+//	}
 	
 
 	@RequestMapping(path = "/createUser", method = RequestMethod.POST)
@@ -228,15 +238,25 @@ public class ShrimpFarmController {
 
 	// Farm Operations
 
-	@RequestMapping(path = "/farm/list", method = RequestMethod.GET)
-	public List<Farm> getFarmList() {
-		return farmRepo.findAll();
+	@RequestMapping(path = "/caafarm/list/{mandal}", method = RequestMethod.GET)
+	public List<CAAFarm> getCAAList(@PathVariable("mandal") String mandal) {
+		return caaFarmRepo.getByUuid(mandal);
+	}
+	
+	@RequestMapping(path = "/state/list", method = RequestMethod.GET)
+	public List<State> getStateList() {
+		return stateRepo.findAll();
 	}
 
 	@RequestMapping(path = "/farm/list", method = RequestMethod.POST)
 	public List<Farm> getFarmList(@Valid @RequestBody List<Farm> farmList) {
 		List<Farm> addedList = farmList.stream().map(a -> farmRepo.save(a)).collect(Collectors.toList());
 		return addedList;
+	}
+	
+	@RequestMapping(path = "/caafarm/list", method = RequestMethod.GET)
+	public List<Farm> getFarmList() {
+		return farmRepo.findAll();
 	}
 
 }
