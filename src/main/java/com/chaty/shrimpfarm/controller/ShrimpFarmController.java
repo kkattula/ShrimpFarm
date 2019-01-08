@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.chaty.shrimpfarm.controller.utils.DataLoaderUtil;
 import com.chaty.shrimpfarm.farmloader.CAAFarm;
 import com.chaty.shrimpfarm.farmloader.CAAFarmLoader;
+import com.chaty.shrimpfarm.farmloader.ExistingDataLoader;
 import com.chaty.shrimpfarm.farmloader.State;
 import com.chaty.shrimpfarm.model.Farm;
 import com.chaty.shrimpfarm.model.Feed;
@@ -92,6 +93,9 @@ public class ShrimpFarmController {
 	
 	@Autowired
 	CAAFarmLoader caaUtil;
+	
+	@Autowired
+	ExistingDataLoader oldLoader;
 
 	@RequestMapping("/user")
 	public Principal user(Principal user) {
@@ -122,6 +126,12 @@ public class ShrimpFarmController {
 		model.put("id", UUID.randomUUID().toString());
 		model.put("content", "Hello World");
 		return model;
+	}
+	
+	@RequestMapping(path = "/loadOLD", method = RequestMethod.GET)
+	public String oldData() {
+		oldLoader.loadExisting();
+		return "OK";
 	}
 
 	// Dashboard Data
