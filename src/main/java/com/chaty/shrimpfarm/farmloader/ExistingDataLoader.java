@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,10 +17,10 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.chaty.shrimpfarm.model.Activity;
+import com.chaty.shrimpfarm.activity.model.Activity;
+import com.chaty.shrimpfarm.activity.model.FeedActivity;
+import com.chaty.shrimpfarm.activity.model.PondActivity;
 import com.chaty.shrimpfarm.model.Feed;
-import com.chaty.shrimpfarm.model.FeedAct;
-import com.chaty.shrimpfarm.model.PondActivity;
 import com.chaty.shrimpfarm.repository.ActivityRepo;
 
 @Component
@@ -30,12 +29,11 @@ public class ExistingDataLoader {
 	@Autowired
 	ActivityRepo activityRepo;
 
-
 	public void loadExisting() {
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d-MMM-yyyy");
 
-		String fileLocation = "/Users/chaty/Documents/Aerator/ExcelData/FeedP2.xlsx";
+		String fileLocation = "/Users/chaty/Documents/Aerator/ExcelData/FeedS3.xlsx";
 
 		try {
 
@@ -44,12 +42,12 @@ public class ExistingDataLoader {
 			Workbook workbook = new XSSFWorkbook(excelFile);
 
 			Activity activity = new Activity();
-			activity.setSeason("Winter-2018");
+			activity.setSeason("4f6a4981-9059-418f-96f6-7ff8d3a135ff");
+			activity.setPondUUID("689ebe9b-7732-41c2-9f4d-455772ed5cb0");
 
 			PondActivity pondAct = new PondActivity();
-			pondAct.setPondUUID("P2");
 
-			List<FeedAct> feedActList = new ArrayList<>();
+			List<FeedActivity> feedActList = new ArrayList<>();
 
 			List<String> meals = new ArrayList<>();
 			boolean firstRow = true;
@@ -71,7 +69,7 @@ public class ExistingDataLoader {
 				} else {
 
 					if (currentRow.getCell(0).toString().matches("[0-9]{1,2}-[a-zA-Z]{3}-[0-9]{4}")) {
-						FeedAct feedAct = new FeedAct();
+						FeedActivity feedAct = new FeedActivity();
 						feedAct.setDate(LocalDate.parse(currentRow.getCell(0).toString(), formatter));
 
 						List<Feed> feedList = new ArrayList<>();
@@ -92,10 +90,11 @@ public class ExistingDataLoader {
 				firstRow = false;
 
 			}
+			
 
 			pondAct.setFeedList(feedActList);
-			activity.setPondActivityList(Arrays.asList(pondAct));
-	
+			activity.setPondActivity(pondAct);
+
 			activityRepo.save(activity);
 
 		} catch (FileNotFoundException e) {

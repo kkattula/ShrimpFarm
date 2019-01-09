@@ -2,14 +2,14 @@ package com.chaty.shrimpfarm.model;
 
 import java.util.List;
 
+import com.chaty.shrimpfarm.activity.model.FeedActivity;
+
 import lombok.Data;
 
 @Data
 public class PondSummary {
-	
-	private String _id;
 
-	private Integer number;
+	private String number;
 
 	private String site;
 
@@ -27,7 +27,7 @@ public class PondSummary {
 
 	private List<Supplement> supplement;
 
-	private List<Feed> feed;
+	private List<FeedActivity> feed;
 	
 	private List<Harvest> harvest;
 

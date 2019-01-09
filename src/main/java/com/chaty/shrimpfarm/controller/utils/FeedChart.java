@@ -54,11 +54,8 @@ public class FeedChart {
 				feed.setAmount(f / 1000);
 				feed.setType(feedModelList.get(i).getFeedType());
 				feed.setTime(feedTime.get(j));
-				feed.setPond(pondNumber);
 				feed.setDate(LocalDate.now().withYear(2018).withMonth(1).withDayOfMonth(i + 1));
 				feed.setCheck(false);
-				feed.setSeason(season);
-				feed.setSite(site);
 				feedList.add(feed);
 			}
 		}

@@ -20,32 +20,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.chaty.shrimpfarm.controller.utils.DataLoaderUtil;
+import com.chaty.shrimpfarm.activity.model.Activity;
 import com.chaty.shrimpfarm.farmloader.CAAFarm;
 import com.chaty.shrimpfarm.farmloader.CAAFarmLoader;
 import com.chaty.shrimpfarm.farmloader.ExistingDataLoader;
 import com.chaty.shrimpfarm.farmloader.State;
-import com.chaty.shrimpfarm.model.Farm;
-import com.chaty.shrimpfarm.model.Feed;
-import com.chaty.shrimpfarm.model.Harvest;
-import com.chaty.shrimpfarm.model.Pond;
 import com.chaty.shrimpfarm.model.PondSummary;
-import com.chaty.shrimpfarm.model.Sampling;
-import com.chaty.shrimpfarm.model.Season;
 import com.chaty.shrimpfarm.model.Stock;
-import com.chaty.shrimpfarm.model.Supplement;
 import com.chaty.shrimpfarm.model.User;
+import com.chaty.shrimpfarm.repository.ActivityRepo;
 import com.chaty.shrimpfarm.repository.CAAFarmRepo;
 import com.chaty.shrimpfarm.repository.ExpenseRepo;
-import com.chaty.shrimpfarm.repository.FarmRepo;
-import com.chaty.shrimpfarm.repository.FeedRepo;
-import com.chaty.shrimpfarm.repository.HarvestRepo;
-import com.chaty.shrimpfarm.repository.PondRepo;
-import com.chaty.shrimpfarm.repository.SamplingRepo;
-import com.chaty.shrimpfarm.repository.SeasonRepo;
 import com.chaty.shrimpfarm.repository.StateRepo;
-import com.chaty.shrimpfarm.repository.StockRepo;
-import com.chaty.shrimpfarm.repository.SupplementRepo;
 import com.chaty.shrimpfarm.repository.UserRepo;
 
 @RestController
@@ -53,47 +39,23 @@ import com.chaty.shrimpfarm.repository.UserRepo;
 public class ShrimpFarmController {
 
 	@Autowired
-	FeedRepo feedEntryRepo;
-
-	@Autowired
 	ExpenseRepo expenseRepo;
-
-	@Autowired
-	HarvestRepo harvestRepo;
-
-	@Autowired
-	SamplingRepo samplingRepo;
-
-	@Autowired
-	SupplementRepo supplementRepo;
-
-	@Autowired
-	PondRepo pondRepo;
-
-	@Autowired
-	StockRepo stockRepo;
 
 	@Autowired
 	UserRepo userRepo;
 
 	@Autowired
-	FarmRepo farmRepo;
-
-	@Autowired
-	SeasonRepo seasonRepo;
-	
-	@Autowired
 	StateRepo stateRepo;
-	
+
 	@Autowired
 	CAAFarmRepo caaFarmRepo;
 
 	@Autowired
-	DataLoaderUtil util;
-	
+	ActivityRepo activityRepo;
+
 	@Autowired
 	CAAFarmLoader caaUtil;
-	
+
 	@Autowired
 	ExistingDataLoader oldLoader;
 
@@ -101,13 +63,12 @@ public class ShrimpFarmController {
 	public Principal user(Principal user) {
 		return user;
 	}
-	
-//	@RequestMapping("/loadCAA")
-//	public String loadCAA() {
-//		caaUtil.loadCAAFarms();
-//		return "DONE";
-//	}
-	
+
+	// @RequestMapping("/loadCAA")
+	// public String loadCAA() {
+	// caaUtil.loadCAAFarms();
+	// return "DONE";
+	// }
 
 	@RequestMapping(path = "/createUser", method = RequestMethod.POST)
 	public User user(@Valid @RequestBody User user) {
@@ -127,7 +88,7 @@ public class ShrimpFarmController {
 		model.put("content", "Hello World");
 		return model;
 	}
-	
+
 	@RequestMapping(path = "/loadOLD", method = RequestMethod.GET)
 	public String oldData() {
 		oldLoader.loadExisting();
@@ -141,37 +102,29 @@ public class ShrimpFarmController {
 
 		List<PondSummary> pondInfoList = new ArrayList<>();
 
-		List<Season> seasonList = seasonRepo.findByFarmUUID(site);
-		List<Feed> feedList = feedEntryRepo.findAll();
-		List<Stock> stockList = stockRepo.findAll();
-		List<Sampling> samplingList = samplingRepo.findAll();
-		List<Supplement> supplementList = supplementRepo.findAll();
-		List<Harvest> harvestList = harvestRepo.findAll();
+		List<Activity> pondActivityBySeason = activityRepo.findBySeason(season);
 
-		pondInfoList = seasonList.get(0).getPonds().stream().map(obj -> {
+		pondInfoList = pondActivityBySeason.stream().map(obj -> {
 
 			PondSummary info = new PondSummary();
 
-			info.setStock(stockList.stream()
-					.filter(s -> s.getSeason().equals(season) && s.getPond().equals(obj.getUuid())).findFirst().get());
+			Stock stok = obj.getPondActivity().getStock();
 
-			info.setFeed(
-					feedList.stream().filter(s -> s.getSeason().equals(season) && s.getPond().equals(obj.getUuid()))
-							.collect(Collectors.toList()));
+			if (stok != null) {
+				info.setStock(stok);
+			}
 
-			info.setSupplement(supplementList.stream()
-					.filter(s -> s.getSeason().equals(season) && s.getPond().equals(obj.getUuid()))
-					.collect(Collectors.toList()));
+			info.setFeed(obj.getPondActivity().getFeedList());
 
-			info.setHarvest(
-					harvestList.stream().filter(s -> s.getSeason().equals(season) && s.getPond().equals(obj.getUuid()))
-							.collect(Collectors.toList()));
+			info.setSupplement(obj.getPondActivity().getSupplementList());
 
-			info.setSampling(
-					samplingList.stream().filter(s -> s.getSeason().equals(season) && s.getPond().equals(obj.getUuid()))
-							.collect(Collectors.toList()));
+			info.setHarvest(obj.getPondActivity().getHarvest());
 
-			Double total = info.getFeed().stream().mapToDouble(a -> a.getAmount()).sum();
+			info.setSampling(obj.getPondActivity().getSamplingList());
+
+			Double total = info.getFeed().stream()
+					.mapToDouble(a -> a.getFeedList().stream().mapToDouble(fe -> fe.getAmount()).sum()).sum();
+
 			info.setFeedTotal(total.floatValue());
 
 			if (info.getHarvest() != null && info.getHarvest().size() > 0) {
@@ -179,12 +132,18 @@ public class ShrimpFarmController {
 				Long days = ChronoUnit.DAYS.between(info.getStock().getDate(), harvestDate);
 				info.setProgressDays(days.intValue());
 			} else {
-				Long days = ChronoUnit.DAYS.between(info.getStock().getDate(), LocalDate.now());
+				Long days;
+				if (info.getStock() != null) {
+					days = ChronoUnit.DAYS.between(info.getStock().getDate(), LocalDate.now());
+				} else {
+					days = Long.valueOf("0");
+				}
+
 				info.setProgressDays(days.intValue());
 			}
 
-			info.setNumber(obj.getNumber());
-			info.setSite(obj.getSite());
+			info.setNumber(obj.getPondUUID());
+			info.setSite(obj.getFarmUUID());
 			info.setSeason(obj.getSeason());
 			info.setSize(1.0);
 
@@ -195,78 +154,16 @@ public class ShrimpFarmController {
 
 	}
 
-	// Load Data
-
-	@RequestMapping(path = "/loadFeed/{pond}/{stock}/{site}/{season}", method = RequestMethod.GET)
-	public List<Feed> loadFeed(@PathVariable("pond") String pond, @PathVariable("stock") int stock,
-			@PathVariable("site") String site, @PathVariable("season") String season) {
-		return util.loadFeed(pond, stock, site, season);
-	}
-
-	@RequestMapping(path = "/loadHarvest/{pond}/{site}/{season}", method = RequestMethod.GET)
-	public List<Harvest> loadHarvest(@PathVariable("pond") String pond, @PathVariable("site") String site,
-			@PathVariable("season") String season) {
-		return util.loadHarvest(pond, site, season);
-	}
-
-	@RequestMapping(path = "/loadSupplement/{pond}/{site}/{season}", method = RequestMethod.GET)
-	public List<Supplement> loadSupplement(@PathVariable("pond") String pond, @PathVariable("site") String site,
-			@PathVariable("season") String season) {
-		return util.loadSupplement(pond, site, season);
-	}
-
-	@RequestMapping(path = "/loadSampling/{pond}/{site}/{season}", method = RequestMethod.GET)
-	public List<Sampling> loadSampling(@PathVariable("pond") String pond, @PathVariable("site") String site,
-			@PathVariable("season") String season) {
-		return util.loadSampling(pond, site, season);
-	}
-
-	@RequestMapping(path = "/loadStock/{pond}/{site}/{season}", method = RequestMethod.GET)
-	public List<Stock> loadStock(@PathVariable("pond") String pond, @PathVariable("site") String site,
-			@PathVariable("season") String season) {
-		return util.loadStock(pond, site, season);
-	}
-
-	@RequestMapping(path = "/loadPond/{site}/{numberofponds}", method = RequestMethod.GET)
-	public List<Pond> loadPond(@PathVariable("site") String site,
-			@PathVariable("numberofponds") Integer numberofponds) {
-		return util.loadPond(site, numberofponds);
-	}
-
-	// Pond Operations
-
-	@RequestMapping(path = "/pond/list", method = RequestMethod.GET)
-	public List<Pond> getPondList() {
-		return pondRepo.findAll();
-	}
-
-	@RequestMapping(path = "/pond/list", method = RequestMethod.POST)
-	public List<Pond> addPondList(@Valid @RequestBody List<Pond> pondList) {
-		List<Pond> addedList = pondList.stream().map(a -> pondRepo.save(a)).collect(Collectors.toList());
-		return addedList;
-	}
-
 	// Farm Operations
 
 	@RequestMapping(path = "/caafarm/list/{mandal}", method = RequestMethod.GET)
 	public List<CAAFarm> getCAAList(@PathVariable("mandal") String mandal) {
 		return caaFarmRepo.getByUuid(mandal);
 	}
-	
+
 	@RequestMapping(path = "/state/list", method = RequestMethod.GET)
 	public List<State> getStateList() {
 		return stateRepo.findAll();
-	}
-
-	@RequestMapping(path = "/farm/list", method = RequestMethod.POST)
-	public List<Farm> getFarmList(@Valid @RequestBody List<Farm> farmList) {
-		List<Farm> addedList = farmList.stream().map(a -> farmRepo.save(a)).collect(Collectors.toList());
-		return addedList;
-	}
-	
-	@RequestMapping(path = "/caafarm/list", method = RequestMethod.GET)
-	public List<Farm> getFarmList() {
-		return farmRepo.findAll();
 	}
 
 }
