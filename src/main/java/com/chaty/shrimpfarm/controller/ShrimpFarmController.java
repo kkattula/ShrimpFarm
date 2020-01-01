@@ -154,6 +154,11 @@ public class ShrimpFarmController {
 
 	}
 
+	@RequestMapping(path = "/updatePondSummary", method = RequestMethod.POST)
+	public void updatePondSummary(@Valid @RequestBody PondSummary summary) {
+
+	}
+
 	// Farm Operations
 
 	@RequestMapping(path = "/caafarm/list/{mandal}", method = RequestMethod.GET)

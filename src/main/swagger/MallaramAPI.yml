@@ -1,0 +1,202 @@
+# this is an example of the Uber API
+# as a demonstration of an API spec in YAML
+swagger: '2.0'
+info:
+  title: API
+  description: API that supports Mallaram Angualr APP
+  version: "1.0.0"
+# the domain of the service
+host: api.mallaram.chaty.com
+# array of all schemes that your API supports
+schemes:
+  - https
+# will be prefixed to all paths
+basePath: /v1
+produces:
+  - application/json
+paths:
+
+  /account:
+    post:
+      summary: Create Account
+      description: |
+        This endpoint creates an account.
+      parameters:
+        - name: AccountInfo
+          in: body
+          description: Account Object to be added.
+          schema:
+            $ref: '#/definitions/AccountData'
+      tags:
+        - Account
+      responses:
+        200:
+          description: Account Entry Added Sucessfully.
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    
+    put:
+      summary: Update Account
+      description: |
+        This endpoint updates an account.
+      parameters:
+        - name: AccountInfo
+          in: body
+          description: Account Object to be updated.
+          schema:
+            $ref: '#/definitions/AccountData'
+      tags:
+        - Account
+      responses:
+        200:
+          description: Account Entry Updated Sucessfully.
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /account/{id}:
+    delete:
+      summary: Delete Account
+      description: |
+        This endpoint creates an account.
+      parameters:
+        - name: id
+          in: path
+          description: Account ID to be Deleted.
+          required: true
+          type: string
+          
+      tags:
+        - Account
+      responses:
+        200:
+          description: Account Entry Deleted Sucessfully.
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+            
+definitions:
+
+  
+  AccountData:
+    type: object
+    properties:
+      _id:
+        type: string
+        description: Monfo DB ID
+      username:
+        type: string
+        description: Name.
+      email:
+        type: string
+        description: Email Addres
+      image:
+        type: string
+        description: Image URL.
+      nickname:
+        type: string
+        description: pond nickname.
+      token:
+        type: string
+        description: account token.
+      status:
+        type: string
+        description: Current Account Status Active/Not.
+      roles:
+        type: array
+        items:
+          type: string
+      orders:
+        type: array
+        items:
+          $ref: '#/definitions/Orders'
+  
+  
+  Orders:
+    type: object
+    properties:
+      id: 
+        type: string
+        description: Name
+      products:
+        type: array
+        items:
+           $ref: '#/definitions/Product'
+      total:
+        type: integer
+        format: int32
+        description: Total Amount.
+      payment:
+        $ref : '#/definitions/Payment'
+      shipping:
+        $ref : '#/definitions/Address'
+      expWeight:
+        type: integer
+        format: int32
+        description: Expected shrimp weight.
+  
+  Product:
+    type: object
+    properties:
+      id:
+        type: string
+        description: Product Unique ID
+      name:
+        type: string
+        description: Name.
+      imageList:
+        type: array
+        items:
+          type: string
+  
+  Payment:
+    type: object
+    properties:
+      cardNumber:
+        type: string
+        description: Product Unique ID
+      expiryDate:
+        type: string
+        description: Name.
+      cvv:
+         type: integer
+  
+  Address:
+    type: object
+    properties:
+      firstName:
+        type: string
+        description: Product Unique ID
+      lastName:
+        type: string
+        description: Name.
+      street:
+        type: string
+        description: street.
+      city:
+        type: string
+        description: city.
+      province:
+        type: string
+        description: province.
+      postalCode:
+        type: string
+        description: Name.
+      phoneNumber:
+        type: string
+        description: Name.
+        
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string
